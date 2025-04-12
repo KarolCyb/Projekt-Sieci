@@ -16,7 +16,7 @@
 #include <QFile>
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QHostAddress>
-
+#include <QtNetwork/QTcpServer>
 
 
 QT_BEGIN_NAMESPACE
@@ -60,6 +60,7 @@ private slots:
     void on_Sposob_triggered(QAction *arg1);
     void on_btnSendSignal_clicked();
 
+
 private:
     Ui::MainWindow *ui;
     QTimer *simulationTimer;
@@ -77,5 +78,6 @@ private:
     QTcpSocket* TCPpolaczenie;
     QHostAddress address;
     int port;
+    QTcpServer* TCPserver;
 };
 #endif // MAINWINDOW_H

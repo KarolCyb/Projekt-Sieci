@@ -443,23 +443,48 @@ void MainWindow::on_Sposob_triggered(QAction *arg1)
 
 void MainWindow::on_btnSendSignal_clicked()
 {
-    TCPpolaczenie = new QTcpSocket(this);
+
     QString adres = ui->letIP->text();
 
     port = ui->sbxPort->value();
 
-    ui->statusbar->showMessage("Łączenie...");
+    if(!ui->chkServer->isChecked()){
+        TCPpolaczenie = new QTcpSocket(this);
 
-    address.setAddress(adres);
+        ui->statusbar->showMessage("Łączenie...");
 
-    qInfo() << address.isNull();
+        address.setAddress(adres);
 
-    if(!address.isNull()) {
-        TCPpolaczenie->connectToHost(address,port);
-        ui->statusbar->showMessage("Połączono z " + address.toString() + ":" + QString::number(port));
+        if(!address.isNull()) {
+           TCPpolaczenie->connectToHost(address,port);
+
+                if(TCPpolaczenie->waitForConnected(3000)) {
+
+                    QMessageBox::information(this, "Informacja", "Połączono z " + address.toString());
+
+                    ui->statusbar->showMessage("Połączono z " + address.toString() + ":" + QString::number(port));
+
+                }
+                else    {
+                    QMessageBox::information(this, "Informacja", "Błąd połączenia");
+                    ui->statusbar->showMessage("Błąd połączenia " + TCPpolaczenie->errorString());
+                }
+
+        }
+        else {
+            ui->statusbar->showMessage("Błąd połączenia " + TCPpolaczenie->errorString());
+            QMessageBox::information(this, "Informacja", "Sprawdź czy poprawnie uzupełniłeś adress ip oraz porty");
+        }
     }
-    else {
-        ui->statusbar->showMessage("Błąd połączenia " + TCPpolaczenie->errorString());
-        QMessageBox::information(this, "Informacja", "Sprawdź czy poprawnie uzupełniłeś adress ip oraz porty");
+    else    {
+        TCPserver = new QTcpServer(this);
+
+        if(TCPserver->listen(QHostAddress::Any, port))  {
+            ui->statusbar->showMessage("Serwer nasłuchuje na porcie: " + QString::number(port));
+        }
+        else    {
+            QMessageBox::information(this, "Informacja", "Błąd servera TCP");
+        }
+
     }
 }
