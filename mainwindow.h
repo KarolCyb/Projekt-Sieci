@@ -75,5 +75,7 @@ private:
     Regulator* reg;
     Generator* gen;
     QTcpSocket* TCPpolaczenie;
+    QHostAddress address;
+    int port;
 };
 #endif // MAINWINDOW_H

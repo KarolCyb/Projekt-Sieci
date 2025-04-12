@@ -441,20 +441,22 @@ void MainWindow::on_Sposob_triggered(QAction *arg1)
 }
 
 
-
-
 void MainWindow::on_btnSendSignal_clicked()
 {
     TCPpolaczenie = new QTcpSocket(this);
     QString adres = ui->letIP->text();
-    int port = ui->sbxPort->value();
-    QHostAddress address(adres);
+
+    port = ui->sbxPort->value();
 
     ui->statusbar->showMessage("Łączenie...");
 
-    if(!adres.isNull()) {
-        TCPpolaczenie->connectToHost(adres,port);
-        ui->statusbar->showMessage("Połączono z " + adres + " " + QString::number(port));
+    address.setAddress(adres);
+
+    qInfo() << address.isNull();
+
+    if(!address.isNull()) {
+        TCPpolaczenie->connectToHost(address,port);
+        ui->statusbar->showMessage("Połączono z " + address.toString() + ":" + QString::number(port));
     }
     else {
         ui->statusbar->showMessage("Błąd połączenia " + TCPpolaczenie->errorString());

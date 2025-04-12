@@ -788,7 +788,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_11" stretch="0,2,0,1,0">
+           <layout class="QVBoxLayout" name="verticalLayout_11" stretch="5,1,5,5,0">
             <property name="spacing">
              <number>6</number>
             </property>
@@ -865,6 +865,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="btnSendSignal">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>Połącz</string>
               </property>
