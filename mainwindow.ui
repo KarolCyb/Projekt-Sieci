@@ -788,7 +788,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_11" stretch="5,1,5,5,0,0">
+           <layout class="QVBoxLayout" name="verticalLayout_11" stretch="5,1,5,5,0,0,0">
             <property name="spacing">
              <number>6</number>
             </property>
@@ -880,6 +880,13 @@
              <widget class="QCheckBox" name="chkServer">
               <property name="text">
                <string>Server</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnRozlacz">
+              <property name="text">
+               <string>Rozłacz</string>
               </property>
              </widget>
             </item>

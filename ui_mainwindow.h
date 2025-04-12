@@ -99,6 +99,7 @@ public:
     QSpinBox *sbxPort;
     QPushButton *btnSendSignal;
     QCheckBox *chkServer;
+    QPushButton *btnRozlacz;
     QSpacerItem *verticalSpacer_4;
     QSpacerItem *horizontalSpacer_3;
     QHBoxLayout *horizontalLayout_3;
@@ -590,6 +591,11 @@ public:
 
         verticalLayout_11->addWidget(chkServer);
 
+        btnRozlacz = new QPushButton(centralwidget);
+        btnRozlacz->setObjectName("btnRozlacz");
+
+        verticalLayout_11->addWidget(btnRozlacz);
+
         verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
 
         verticalLayout_11->addItem(verticalSpacer_4);
@@ -798,6 +804,7 @@ public:
         letIP->setText(QCoreApplication::translate("MainWindow", "127.0.0.1", nullptr));
         btnSendSignal->setText(QCoreApplication::translate("MainWindow", "Po\305\202\304\205cz", nullptr));
         chkServer->setText(QCoreApplication::translate("MainWindow", "Server", nullptr));
+        btnRozlacz->setText(QCoreApplication::translate("MainWindow", "Roz\305\202acz", nullptr));
         TytulWykres2->setText(QCoreApplication::translate("MainWindow", "Warto\305\233\304\207 Uchybu Regulacji", nullptr));
         TytulWykres3->setText(QCoreApplication::translate("MainWindow", "Warto\305\233ci Regulatora PID", nullptr));
         TytulWykres4->setText(QCoreApplication::translate("MainWindow", "Warto\305\233\304\207 Steruj\304\205ca", nullptr));

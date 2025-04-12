@@ -270,6 +270,7 @@ void MainWindow::UstawienieWygladuGUI(){
     ui->UstawieniaObiektuARX->setStyleSheet(buttonStyleReszta);
     ui->Zapisz->setStyleSheet(buttonStyleStart);
     ui->btnSendSignal->setStyleSheet(buttonStyleReszta);
+    ui->btnRozlacz->setStyleSheet(buttonStyleReszta);
 
 
     ui->TytulWykres1->setStyleSheet(
@@ -461,7 +462,7 @@ void MainWindow::on_btnSendSignal_clicked()
                 if(TCPpolaczenie->waitForConnected(3000)) {
 
                     QMessageBox::information(this, "Informacja", "Połączono z " + address.toString());
-
+                    connect(TCPpolaczenie, SIGNAL(readyRead()), this, SLOT(OdczytajDane()));
                     ui->statusbar->showMessage("Połączono z " + address.toString() + ":" + QString::number(port));
 
                 }
@@ -469,7 +470,6 @@ void MainWindow::on_btnSendSignal_clicked()
                     QMessageBox::information(this, "Informacja", "Błąd połączenia");
                     ui->statusbar->showMessage("Błąd połączenia " + TCPpolaczenie->errorString());
                 }
-
         }
         else {
             ui->statusbar->showMessage("Błąd połączenia " + TCPpolaczenie->errorString());
@@ -488,3 +488,21 @@ void MainWindow::on_btnSendSignal_clicked()
 
     }
 }
+
+void MainWindow::OdczytajDane() {
+    if(TCPpolaczenie->isOpen()) {
+        qDebug() << "Jest połaczenie!";
+    }
+}
+
+void MainWindow::on_btnRozlacz_clicked()
+{
+    if(!address.isNull())   {
+        if(TCPpolaczenie->isOpen()) {
+            ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
+            TCPpolaczenie->disconnectFromHost();
+            TCPpolaczenie->close();
+        }
+    }
+}
+
