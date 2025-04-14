@@ -462,7 +462,7 @@ void MainWindow::on_btnSendSignal_clicked()
                 if(TCPpolaczenie->waitForConnected(3000)) {
 
                     QMessageBox::information(this, "Informacja", "Połączono z " + address.toString());
-                    connect(TCPpolaczenie, SIGNAL(readyRead()), this, SLOT(OdczytajDane()));
+                    //connect(TCPpolaczenie, SIGNAL(disconnected()), this, SLOT(Otrzymaj()));
                     ui->statusbar->showMessage("Połączono z " + address.toString() + ":" + QString::number(port));
 
                 }
@@ -489,11 +489,11 @@ void MainWindow::on_btnSendSignal_clicked()
     }
 }
 
-void MainWindow::OdczytajDane() {
-    if(TCPpolaczenie->isOpen()) {
-        qDebug() << "Jest połaczenie!";
-    }
-}
+// void MainWindow::Otrzymaj() {
+//     if(TCPserver->isListening())    {
+//         ui->statusbar->showMessage("Utracono połączenie z klientem");
+//     }
+// }
 
 void MainWindow::on_btnRozlacz_clicked()
 {
@@ -504,5 +504,19 @@ void MainWindow::on_btnRozlacz_clicked()
             TCPpolaczenie->close();
         }
     }
+
+    if(TCPserver->isListening())    {
+        TCPserver->close();
+        ui->statusbar->showMessage("Server zakończył prace");
+    }
+
+
+}
+
+
+void MainWindow::on_chkServer_stateChanged(int arg1)
+{
+    if(ui->letIP->isVisible()) ui->letIP->setVisible(0);
+    else ui->letIP->setVisible(1);
 }
 
