@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     UstawienieLayout();
     UstawienieOkienOrazSygnalowIslotow();
     ui->btnRozlacz->setEnabled(0);
-    // TCPpolaczenie = nullptr;
-    // TCPserver = nullptr;
+    TCPpolaczenie = nullptr;
+    TCPserver = nullptr;
 }
 
 MainWindow::~MainWindow()
@@ -502,27 +502,28 @@ void MainWindow::on_btnSendSignal_clicked()
 
 void MainWindow::on_btnRozlacz_clicked()
 {
-    if(!address.isNull())   {
-        if(TCPpolaczenie->isOpen()) {
-             ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
+    if(TCPpolaczenie != nullptr)
+    {
+        if(TCPpolaczenie->isOpen())
+        {
+            ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
             TCPpolaczenie->disconnectFromHost();
             TCPpolaczenie->close();
             ui->btnSendSignal->setEnabled(1);
             ui->btnRozlacz->setEnabled(0);
         }
     }
+    if(TCPserver != nullptr)
+    {
+        if(TCPserver->isListening())
+        {
+            TCPserver->close();
 
-
-
-
-    if(TCPserver->isListening())    {
-        TCPserver->close();
-
-        ui->statusbar->showMessage("Server zakończył prace");
-        ui->btnSendSignal->setEnabled(1);
-        ui->btnRozlacz->setEnabled(0);
+            ui->statusbar->showMessage("Server zakończył prace");
+            ui->btnSendSignal->setEnabled(1);
+            ui->btnRozlacz->setEnabled(0);
+        }
     }
-
 }
 
 
