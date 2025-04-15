@@ -502,18 +502,16 @@ void MainWindow::on_btnSendSignal_clicked()
 
 void MainWindow::on_btnRozlacz_clicked()
 {
-
-    if(!TCPpolaczenie->isOpen()){
-        if(!address.isNull())   {
-            if(TCPpolaczenie->isOpen()) {
-                ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
-                TCPpolaczenie->disconnectFromHost();
-                TCPpolaczenie->close();
-                ui->btnSendSignal->setEnabled(1);
-                ui->btnRozlacz->setEnabled(0);
-            }
+    if(!address.isNull())   {
+        if(TCPpolaczenie->isOpen()) {
+             ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
+            TCPpolaczenie->disconnectFromHost();
+            TCPpolaczenie->close();
+            ui->btnSendSignal->setEnabled(1);
+            ui->btnRozlacz->setEnabled(0);
         }
     }
+
 
 
 
