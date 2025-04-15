@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     UstawienieWygladuGUI();
     UstawienieLayout();
     UstawienieOkienOrazSygnalowIslotow();
+    ui->btnRozlacz->setEnabled(0);
+    // TCPpolaczenie = nullptr;
+    // TCPserver = nullptr;
 }
 
 MainWindow::~MainWindow()
@@ -463,8 +466,8 @@ void MainWindow::on_btnSendSignal_clicked()
 
                     QMessageBox::information(this, "Informacja", "Połączono z " + address.toString());
                     //connect(TCPpolaczenie, SIGNAL(disconnected()), this, SLOT(Otrzymaj()));
-                    ui->statusbar->showMessage("Połączono z " + address.toString() + ":" + QString::number(port));
-
+                    ui->btnSendSignal->setEnabled(0);
+                    ui->btnRozlacz->setEnabled(1);
                 }
                 else    {
                     QMessageBox::information(this, "Informacja", "Błąd połączenia");
@@ -481,6 +484,8 @@ void MainWindow::on_btnSendSignal_clicked()
 
         if(TCPserver->listen(QHostAddress::Any, port))  {
             ui->statusbar->showMessage("Serwer nasłuchuje na porcie: " + QString::number(port));
+            ui->btnSendSignal->setEnabled(0);
+            ui->btnRozlacz->setEnabled(1);
         }
         else    {
             QMessageBox::information(this, "Informacja", "Błąd servera TCP");
@@ -497,19 +502,28 @@ void MainWindow::on_btnSendSignal_clicked()
 
 void MainWindow::on_btnRozlacz_clicked()
 {
-    if(!address.isNull())   {
-        if(TCPpolaczenie->isOpen()) {
-            ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
-            TCPpolaczenie->disconnectFromHost();
-            TCPpolaczenie->close();
+
+    if(!TCPpolaczenie->isOpen()){
+        if(!address.isNull())   {
+            if(TCPpolaczenie->isOpen()) {
+                ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
+                TCPpolaczenie->disconnectFromHost();
+                TCPpolaczenie->close();
+                ui->btnSendSignal->setEnabled(1);
+                ui->btnRozlacz->setEnabled(0);
+            }
         }
     }
 
+
+
     if(TCPserver->isListening())    {
         TCPserver->close();
-        ui->statusbar->showMessage("Server zakończył prace");
-    }
 
+        ui->statusbar->showMessage("Server zakończył prace");
+        ui->btnSendSignal->setEnabled(1);
+        ui->btnRozlacz->setEnabled(0);
+    }
 
 }
 
