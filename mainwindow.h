@@ -59,12 +59,14 @@ private slots:
     void on_Sposob_clicked();
     void on_Sposob_triggered(QAction *arg1);
     void on_btnSendSignal_clicked();
-    //void Otrzymaj();
+    void Otrzymaj();
 
 
     void on_btnRozlacz_clicked();
 
     void on_chkServer_stateChanged(int arg1);
+
+    void on_cbxZmianaTrybu_activated(int index);
 
 private:
     Ui::MainWindow *ui;

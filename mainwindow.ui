@@ -788,7 +788,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_11" stretch="5,1,5,5,0,0,0">
+           <layout class="QVBoxLayout" name="verticalLayout_11" stretch="5,0,1,5,5,0,0,0">
             <property name="spacing">
              <number>6</number>
             </property>
@@ -807,6 +807,20 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cbxZmianaTrybu">
+              <item>
+               <property name="text">
+                <string>Tryb Stacjonarny</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Tryb Sieciowy</string>
+               </property>
+              </item>
+             </widget>
             </item>
             <item>
              <widget class="QLabel" name="lblPolaczenie">

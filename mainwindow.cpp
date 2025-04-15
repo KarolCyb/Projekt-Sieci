@@ -23,6 +23,12 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     ui->btnRozlacz->setEnabled(0);
     TCPpolaczenie = nullptr;
     TCPserver = nullptr;
+    ui->lblPolaczenie->setVisible(0);
+    ui->btnRozlacz->setVisible(0);
+    ui->btnSendSignal->setVisible(0);
+    ui->chkServer->setVisible(0);
+    ui->letIP->setVisible(0);
+    ui->sbxPort->setVisible(0);
 }
 
 MainWindow::~MainWindow()
@@ -465,7 +471,8 @@ void MainWindow::on_btnSendSignal_clicked()
                 if(TCPpolaczenie->waitForConnected(3000)) {
 
                     QMessageBox::information(this, "Informacja", "Połączono z " + address.toString());
-                    //connect(TCPpolaczenie, SIGNAL(disconnected()), this, SLOT(Otrzymaj()));
+
+                    ui->statusbar->showMessage("Otrzymano połączenie z serwerem " + address.toString() + " na porcie:  " +  QString::number(port));
                     ui->btnSendSignal->setEnabled(0);
                     ui->btnRozlacz->setEnabled(1);
                 }
@@ -484,6 +491,8 @@ void MainWindow::on_btnSendSignal_clicked()
 
         if(TCPserver->listen(QHostAddress::Any, port))  {
             ui->statusbar->showMessage("Serwer nasłuchuje na porcie: " + QString::number(port));
+            connect(TCPserver, SIGNAL(newConnection()), this, SLOT(Otrzymaj()));
+            //connect(TCPserver, SIGNAL(disco))
             ui->btnSendSignal->setEnabled(0);
             ui->btnRozlacz->setEnabled(1);
         }
@@ -494,11 +503,14 @@ void MainWindow::on_btnSendSignal_clicked()
     }
 }
 
-// void MainWindow::Otrzymaj() {
-//     if(TCPserver->isListening())    {
-//         ui->statusbar->showMessage("Utracono połączenie z klientem");
-//     }
-// }
+void MainWindow::Otrzymaj() {
+
+    QTcpSocket* socket = TCPserver->nextPendingConnection();
+
+    if(TCPserver != nullptr) {
+        ui->statusbar->showMessage("Połączono z kilentem o adresie:" + socket->localAddress().toString() );
+    }
+}
 
 void MainWindow::on_btnRozlacz_clicked()
 {
@@ -531,5 +543,54 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
 {
     if(ui->letIP->isVisible()) ui->letIP->setVisible(0);
     else ui->letIP->setVisible(1);
+}
+
+
+void MainWindow::on_cbxZmianaTrybu_activated(int index)
+{
+    if(index == 0)  {
+        ui->lblPolaczenie->setVisible(0);
+        ui->btnRozlacz->setVisible(0);
+        ui->btnSendSignal->setVisible(0);
+        ui->chkServer->setVisible(0);
+        ui->letIP->setVisible(0);
+        ui->sbxPort->setVisible(0);
+
+        ui->Sposob->setEnabled(1);
+        ui->Interwal->setEnabled(1);
+        ui->RodzajSygnalu->setEnabled(1);
+        ui->Amplituda->setEnabled(1);
+        ui->Wypelnienie->setEnabled(1);
+        ui->CzasAktywacji->setEnabled(1);
+        ui->Okres->setEnabled(1);
+        ui->Wzmocnienie->setEnabled(1);
+        ui->StalaI->setEnabled(1);
+        ui->StalaD->setEnabled(1);
+        ui->UstawieniaObiektuARX->setEnabled(1);
+        ui->Zapisz->setEnabled(1);
+        ui->Wczytaj->setEnabled(1);
+    }
+    else if(index == 1) {
+        ui->lblPolaczenie->setVisible(1);
+        ui->btnRozlacz->setVisible(1);
+        ui->btnSendSignal->setVisible(1);
+        ui->chkServer->setVisible(1);
+        ui->letIP->setVisible(1);
+        ui->sbxPort->setVisible(1);
+
+        ui->Sposob->setEnabled(0);
+        ui->Interwal->setEnabled(0);
+        ui->RodzajSygnalu->setEnabled(0);
+        ui->Amplituda->setEnabled(0);
+        ui->Wypelnienie->setEnabled(0);
+        ui->CzasAktywacji->setEnabled(0);
+        ui->Okres->setEnabled(0);
+        ui->Wzmocnienie->setEnabled(0);
+        ui->StalaI->setEnabled(0);
+        ui->StalaD->setEnabled(0);
+        ui->UstawieniaObiektuARX->setEnabled(0);
+        ui->Zapisz->setEnabled(0);
+        ui->Wczytaj->setEnabled(0);
+    }
 }
 

@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
@@ -93,6 +94,7 @@ public:
     QHBoxLayout *horizontalLayout_4;
     QVBoxLayout *verticalLayout_11;
     QSpacerItem *verticalSpacer_3;
+    QComboBox *cbxZmianaTrybu;
     QLabel *lblPolaczenie;
     QHBoxLayout *horizontalLayout_13;
     QLineEdit *letIP;
@@ -548,6 +550,13 @@ public:
 
         verticalLayout_11->addItem(verticalSpacer_3);
 
+        cbxZmianaTrybu = new QComboBox(centralwidget);
+        cbxZmianaTrybu->addItem(QString());
+        cbxZmianaTrybu->addItem(QString());
+        cbxZmianaTrybu->setObjectName("cbxZmianaTrybu");
+
+        verticalLayout_11->addWidget(cbxZmianaTrybu);
+
         lblPolaczenie = new QLabel(centralwidget);
         lblPolaczenie->setObjectName("lblPolaczenie");
         lblPolaczenie->setFont(font2);
@@ -601,9 +610,9 @@ public:
         verticalLayout_11->addItem(verticalSpacer_4);
 
         verticalLayout_11->setStretch(0, 5);
-        verticalLayout_11->setStretch(1, 1);
-        verticalLayout_11->setStretch(2, 5);
+        verticalLayout_11->setStretch(2, 1);
         verticalLayout_11->setStretch(3, 5);
+        verticalLayout_11->setStretch(4, 5);
 
         horizontalLayout_4->addLayout(verticalLayout_11);
 
@@ -800,6 +809,9 @@ public:
         NastawaDopis->setText(QCoreApplication::translate("MainWindow", "Nastawa D: ", nullptr));
         Sposob->setText(QCoreApplication::translate("MainWindow", "Spos\303\263b Ca\305\202kowania", nullptr));
         UstawieniaObiektuARX->setText(QCoreApplication::translate("MainWindow", "Obiekt ARX", nullptr));
+        cbxZmianaTrybu->setItemText(0, QCoreApplication::translate("MainWindow", "Tryb Stacjonarny", nullptr));
+        cbxZmianaTrybu->setItemText(1, QCoreApplication::translate("MainWindow", "Tryb Sieciowy", nullptr));
+
         lblPolaczenie->setText(QCoreApplication::translate("MainWindow", "\305\201\304\205czenie", nullptr));
         letIP->setText(QCoreApplication::translate("MainWindow", "127.0.0.1", nullptr));
         btnSendSignal->setText(QCoreApplication::translate("MainWindow", "Po\305\202\304\205cz", nullptr));
