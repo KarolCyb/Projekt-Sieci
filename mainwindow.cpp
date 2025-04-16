@@ -549,6 +549,9 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
 void MainWindow::on_cbxZmianaTrybu_activated(int index)
 {
     if(index == 0)  {
+
+        emit on_btnRozlacz_clicked();
+
         ui->lblPolaczenie->setVisible(0);
         ui->btnRozlacz->setVisible(0);
         ui->btnSendSignal->setVisible(0);
