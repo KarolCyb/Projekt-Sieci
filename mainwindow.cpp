@@ -29,6 +29,18 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     ui->chkServer->setVisible(0);
     ui->letIP->setVisible(0);
     ui->sbxPort->setVisible(0);
+    connect(simulationTimer, &QTimer::timeout, this, [=]() {
+        wykres->WykresWartosciZadanej();
+    });
+    connect(simulationTimer, &QTimer::timeout, this, [=]() {
+        wykres->WykresUchybu();
+    });
+    connect(simulationTimer, &QTimer::timeout, this, [=]() {
+        wykres->WykresPID();
+    });
+    connect(simulationTimer, &QTimer::timeout, this, [=]() {
+        wykres->WykresWartosciSterowania();
+    });
 }
 
 MainWindow::~MainWindow()
@@ -52,18 +64,7 @@ void MainWindow::on_Stop_clicked()
 
 void MainWindow::PokazWykres() {
 
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
-        wykres->WykresWartosciZadanej();
-    });
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
-        wykres->WykresUchybu();
-    });
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
-        wykres->WykresPID();
-    });
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
-        wykres->WykresWartosciSterowania();
-    });
+
     simulationTimer->start(interwalCzasowy);
 
 }
