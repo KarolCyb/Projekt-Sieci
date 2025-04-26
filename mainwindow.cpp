@@ -59,11 +59,13 @@ void MainWindow::dane_i_wykresy()
 
 QByteArray MainWindow::serializuj(QVector<double> dane)
 {
-
+    QByteArray dane_siec = {};
+    return dane_siec;
 }
 QVector<double> MainWindow::deserializuj(QByteArray dane_siec)
 {
-
+    QVector<double> dane;
+    return dane;
 }
 
 MainWindow::~MainWindow()
