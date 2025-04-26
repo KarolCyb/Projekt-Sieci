@@ -61,7 +61,7 @@ private slots:
     void on_btnSendSignal_clicked();
     void Otrzymaj();
 
-
+    void dane_i_wykresy();
     void on_btnRozlacz_clicked();
 
     void on_chkServer_stateChanged(int arg1);

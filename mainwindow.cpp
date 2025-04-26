@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     ui->chkServer->setVisible(0);
     ui->letIP->setVisible(0);
     ui->sbxPort->setVisible(0);
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
+    /*connect(simulationTimer, &QTimer::timeout, this, [=]() {
         wykres->WykresWartosciZadanej();
     });
     connect(simulationTimer, &QTimer::timeout, this, [=]() {
@@ -40,7 +40,21 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     });
     connect(simulationTimer, &QTimer::timeout, this, [=]() {
         wykres->WykresWartosciSterowania();
-    });
+    });*/
+    connect(simulationTimer, &QTimer::timeout, this, &MainWindow::dane_i_wykresy);
+}
+void MainWindow::dane_i_wykresy()
+{
+    wykres->WykresWartosciZadanej();
+    wykres->WykresUchybu();
+    wykres->WykresPID();
+    wykres->WykresWartosciSterowania();
+
+    if(TCPpolaczenie != nullptr)
+    {
+
+        //TCPpolaczenie->write();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -492,7 +506,7 @@ void MainWindow::on_btnSendSignal_clicked()
 
         if(TCPserver->listen(QHostAddress::Any, port))  {
             ui->statusbar->showMessage("Serwer nasłuchuje na porcie: " + QString::number(port));
-            connect(TCPserver, SIGNAL(newConnection()), this, SLOT(Otrzymaj()));
+            connect(TCPserver, SIGNAL(newConnection()), this, SLOT(Otrzymaj())); //Przerzucic do konstruktora
             //connect(TCPserver, SIGNAL(disco))
             ui->btnSendSignal->setEnabled(0);
             ui->btnRozlacz->setEnabled(1);
@@ -538,6 +552,7 @@ void MainWindow::on_btnRozlacz_clicked()
         }
     }
 }
+
 
 
 void MainWindow::on_chkServer_stateChanged(int arg1)
