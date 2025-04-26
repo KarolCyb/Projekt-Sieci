@@ -42,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
         wykres->WykresWartosciSterowania();
     });*/
     connect(simulationTimer, &QTimer::timeout, this, &MainWindow::dane_i_wykresy);
-    connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt);
     in.setDevice(TCPpolaczenie);
 }
 void MainWindow::dane_i_wykresy()
@@ -57,8 +56,8 @@ void MainWindow::dane_i_wykresy()
         //przyklad
         QByteArray dane_siec;
         QDataStream out(&dane_siec, QIODevice::WriteOnly);
-        out << 0.0;
-        qDebug()<<TCPpolaczenie->write(dane_siec); //wysyla, ale nie odbiera
+        out << usluga->getSymulator()->getWyjscieObiektu();
+        TCPpolaczenie->write(dane_siec); //wysyla
         TCPpolaczenie->flush();
         ui->test_lbl->setText("WYS");
     }
@@ -66,12 +65,14 @@ void MainWindow::dane_i_wykresy()
 
 void MainWindow::odczyt()
 {
-    ui->test_lbl->setText("OD");
+    ui->test_lbl->clear();
+    ui->test_lbl->setText("OT ");
     in.startTransaction();
     double val;
     in >> val;
     if (!in.commitTransaction())
         return;
+     ui->test_lbl->text().append(QString::number(val));
 
 }
 QByteArray MainWindow::serializuj(QVector<double> dane)
@@ -549,7 +550,7 @@ void MainWindow::on_btnSendSignal_clicked()
 void MainWindow::Otrzymaj() {
 
     TCPpolaczenie = TCPserver->nextPendingConnection();
-
+    connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt);
     if(TCPserver != nullptr) {
         ui->statusbar->showMessage("Połączono z kilentem o adresie:" + TCPpolaczenie->peerAddress().toString() );
     }
