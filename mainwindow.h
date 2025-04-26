@@ -69,6 +69,8 @@ private slots:
     void on_cbxZmianaTrybu_activated(int index);
 
 private:
+    QByteArray serializuj(QVector<double> dane);
+    QVector<double> deserializuj(QByteArray dane_siec);
     Ui::MainWindow *ui;
     QTimer *simulationTimer;
     WarstwaUslug* usluga ;

@@ -57,6 +57,15 @@ void MainWindow::dane_i_wykresy()
     }
 }
 
+QByteArray MainWindow::serializuj(QVector<double> dane)
+{
+
+}
+QVector<double> MainWindow::deserializuj(QByteArray dane_siec)
+{
+
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
