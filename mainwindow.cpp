@@ -529,7 +529,7 @@ void MainWindow::on_btnSendSignal_clicked()
 
                 if(TCPpolaczenie->waitForConnected(3000)) {
 
-                    QMessageBox::information(this, "Informacja", "Połączono z " + address.toString());
+                    //QMessageBox::information(this, "Informacja", "Połączono z " + address.toString());
 
                     ui->statusbar->showMessage("Otrzymano połączenie z serwerem " + address.toString() + " na porcie:  " +  QString::number(port));
                     ui->btnSendSignal->setEnabled(0);
