@@ -42,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
         wykres->WykresWartosciSterowania();
     });*/
     connect(simulationTimer, &QTimer::timeout, this, &MainWindow::dane_i_wykresy);
-    in.setDevice(TCPpolaczenie);
 }
 void MainWindow::dane_i_wykresy()
 {
@@ -55,10 +54,9 @@ void MainWindow::dane_i_wykresy()
     {
         //przyklad
         QByteArray dane_siec;
-        QDataStream out(&dane_siec, QIODevice::WriteOnly);
-        out << usluga->getSymulator()->getWyjscieObiektu();
-        TCPpolaczenie->write(dane_siec); //wysyla
-        TCPpolaczenie->flush();
+        dane_siec = QByteArray::number(usluga->getSymulator()->getLastRegulatorValue());
+        TCPpolaczenie->write(dane_siec);
+
         ui->test_lbl->setText("WYS");
     }
 }
@@ -66,24 +64,14 @@ void MainWindow::dane_i_wykresy()
 void MainWindow::odczyt()
 {
     ui->test_lbl->clear();
-    ui->test_lbl->setText("OT ");
-    in.startTransaction();
-    double val;
-    in >> val;
-    if (!in.commitTransaction())
-        return;
-     ui->test_lbl->text().append(QString::number(val));
-
-}
-QByteArray MainWindow::serializuj(QVector<double> dane)
-{
-    QByteArray dane_siec = {};
-    return dane_siec;
-}
-QVector<double> MainWindow::deserializuj(QByteArray dane_siec)
-{
-    QVector<double> dane = {};
-    return dane;
+    ui->test_lbl->setText("OT");
+    QByteArray dane_siec;
+    dane_siec = TCPpolaczenie->read(8);
+    double val = dane_siec.toDouble();
+    double wyjscie = usluga->getSymulator()->getObiektARX().obliczWyjscie(val);
+    qDebug()<< val<< " "<<" "<<usluga->getSymulator()->getObiektARX().getWielomianA().size()<<" "<<wyjscie;
+    wykres->WykresWartosciZadanej_siec(wyjscie);
+    wykres->AktualizujWykresy();
 }
 
 MainWindow::~MainWindow()

@@ -11,6 +11,7 @@ double symulator::symulujKrok(double czas) {
     regulator.setWartoscZadana(wartoscZadana);
     regulator.aktualizujUchyb(wyjscieObiektu);
     double sygnalSterowania = regulator.obliczSterowanie();
+
     wyjscieObiektu = obiekt.obliczWyjscie(sygnalSterowania);
     setLastRegulatorValue(sygnalSterowania);
     setLastObjectOutput(wyjscieObiektu);
@@ -49,3 +50,4 @@ Regulator &symulator::getRegulator(){
 ObiektARX symulator::getObiektARX(){
     return obiekt;
 };
+

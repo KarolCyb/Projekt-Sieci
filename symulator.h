@@ -35,6 +35,7 @@ public:
     void setWyjscieObiektu(double wo){wyjscieObiektu=wo;};
     void setObiektARXzHistoria(ObiektARX &o);
     void setRegulatorzHistoria(Regulator &r);
+
 };
 
 #endif // SYMULATOR_H
