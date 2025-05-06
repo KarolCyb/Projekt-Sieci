@@ -68,7 +68,7 @@ void MainWindow::odczyt()
     QByteArray dane_siec;
     dane_siec = TCPpolaczenie->read(8);
     double val = dane_siec.toDouble();
-    double wyjscie = usluga->getSymulator()->getObiektARX().obliczWyjscie(val);
+    double wyjscie = usluga->getSymulator()->symuluj2(val);
     qDebug()<< val<< " "<<" "<<usluga->getSymulator()->getObiektARX().getWielomianA().size()<<" "<<wyjscie;
     wykres->WykresWartosciZadanej_siec(wyjscie);
     wykres->AktualizujWykresy();

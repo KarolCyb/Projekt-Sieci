@@ -18,6 +18,7 @@ public:
     symulator();
     symulator(Generator g, Regulator r, ObiektARX o);
     double symulujKrok(double czas);
+    double symuluj2(double sygnalSterowania);
     double getWartoscZadana();
     double getZaklocenie();
     double getSterowanie();

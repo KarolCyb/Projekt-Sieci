@@ -40,9 +40,9 @@ double ObiektARX::obliczWyjscie(double uii) {
             wynik -= a[j] * yi[j];
         }
     }
-    z = zaklocenie(generator);
-    if (GenerowacZaklocenie) {
 
+    if (GenerowacZaklocenie) {
+         z = zaklocenie(generator);
         wynik += z;
     }
 
