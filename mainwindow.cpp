@@ -29,6 +29,61 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     ui->chkServer->setVisible(0);
     ui->letIP->setVisible(0);
     ui->sbxPort->setVisible(0);
+    /*connect(simulationTimer, &QTimer::timeout, this, [=]() {
+        wykres->WykresWartosciZadanej();
+    });
+    connect(simulationTimer, &QTimer::timeout, this, [=]() {
+        wykres->WykresUchybu();
+    });
+    connect(simulationTimer, &QTimer::timeout, this, [=]() {
+        wykres->WykresPID();
+    });
+    connect(simulationTimer, &QTimer::timeout, this, [=]() {
+        wykres->WykresWartosciSterowania();
+    });*/
+    connect(simulationTimer, &QTimer::timeout, this, &MainWindow::dane_i_wykresy);
+    in.setDevice(TCPpolaczenie);
+}
+void MainWindow::dane_i_wykresy()
+{
+    wykres->WykresWartosciZadanej();
+    wykres->WykresUchybu();
+    wykres->WykresPID();
+    wykres->WykresWartosciSterowania();
+
+    if(TCPpolaczenie != nullptr)
+    {
+        //przyklad
+        QByteArray dane_siec;
+        QDataStream out(&dane_siec, QIODevice::WriteOnly);
+        out << usluga->getSymulator()->getWyjscieObiektu();
+        TCPpolaczenie->write(dane_siec); //wysyla
+        TCPpolaczenie->flush();
+        ui->test_lbl->setText("WYS");
+    }
+}
+
+void MainWindow::odczyt()
+{
+    ui->test_lbl->clear();
+    ui->test_lbl->setText("OT ");
+    in.startTransaction();
+    double val;
+    in >> val;
+    if (!in.commitTransaction())
+        return;
+     ui->test_lbl->text().append(QString::number(val));
+
+}
+QByteArray MainWindow::serializuj(QVector<double> dane)
+{
+    QByteArray dane_siec = {};
+    return dane_siec;
+}
+QVector<double> MainWindow::deserializuj(QByteArray dane_siec)
+{
+    QVector<double> dane = {};
+    return dane;
 }
 
 MainWindow::~MainWindow()
@@ -52,18 +107,7 @@ void MainWindow::on_Stop_clicked()
 
 void MainWindow::PokazWykres() {
 
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
-        wykres->WykresWartosciZadanej();
-    });
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
-        wykres->WykresUchybu();
-    });
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
-        wykres->WykresPID();
-    });
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
-        wykres->WykresWartosciSterowania();
-    });
+
     simulationTimer->start(interwalCzasowy);
 
 }
@@ -491,7 +535,7 @@ void MainWindow::on_btnSendSignal_clicked()
 
         if(TCPserver->listen(QHostAddress::AnyIPv4, port))  {
             ui->statusbar->showMessage("Serwer nasłuchuje na porcie: " + QString::number(port));
-            connect(TCPserver, SIGNAL(newConnection()), this, SLOT(Otrzymaj()));
+            connect(TCPserver, SIGNAL(newConnection()), this, SLOT(Otrzymaj())); //Przerzucic do konstruktora
             //connect(TCPserver, SIGNAL(disco))
             ui->btnSendSignal->setEnabled(0);
             ui->btnRozlacz->setEnabled(1);
@@ -505,10 +549,10 @@ void MainWindow::on_btnSendSignal_clicked()
 
 void MainWindow::Otrzymaj() {
 
-    QTcpSocket* socket = TCPserver->nextPendingConnection();
-
+    TCPpolaczenie = TCPserver->nextPendingConnection();
+    connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt);
     if(TCPserver != nullptr) {
-        ui->statusbar->showMessage("Połączono z kilentem o adresie:" + socket->localAddress().toString() );
+        ui->statusbar->showMessage("Połączono z kilentem o adresie:" + TCPpolaczenie->peerAddress().toString() );
     }
 }
 
@@ -537,6 +581,7 @@ void MainWindow::on_btnRozlacz_clicked()
         }
     }
 }
+
 
 
 void MainWindow::on_chkServer_stateChanged(int arg1)

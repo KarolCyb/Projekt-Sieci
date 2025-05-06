@@ -61,7 +61,8 @@ private slots:
     void on_btnSendSignal_clicked();
     void Otrzymaj();
 
-
+    void dane_i_wykresy();
+    void odczyt();
     void on_btnRozlacz_clicked();
 
     void on_chkServer_stateChanged(int arg1);
@@ -69,6 +70,10 @@ private slots:
     void on_cbxZmianaTrybu_activated(int index);
 
 private:
+    QByteArray serializuj(QVector<double> dane);
+    QVector<double> deserializuj(QByteArray dane_siec);
+
+    QDataStream in;
     Ui::MainWindow *ui;
     QTimer *simulationTimer;
     WarstwaUslug* usluga ;
