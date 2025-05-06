@@ -206,7 +206,7 @@ void Wykresy::WykresWartosciZadanej_siec(double val) {
     }
     double margin = (maxY - minY) * 0.1;
     osY[0]->setRange(minY - margin, maxY + margin);
-    czas+=4;
+
 
 }
 
@@ -232,7 +232,7 @@ void Wykresy::WykresUchybu() {
     double margin = std::max(0.1 * (maxY - minY), 0.01);
 
     osY[1]->setRange(minY - margin, maxY + margin);
-    czas++;
+
 }
 
 void Wykresy::WykresPID() {

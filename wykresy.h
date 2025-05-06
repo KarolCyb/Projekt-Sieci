@@ -31,6 +31,7 @@ public:
     void setSymulator(symulator* sym){s=sym;}
     symulator* getSymulator( ){return s;}
     double getCzas(){return czas;}
+    void setCzas(int czasInt) {czas = czasInt; }
     void krok(){czas++;}
     void wyczyscLayout(QLayout* layout);
     void ResetCzas(){czas=0;}
