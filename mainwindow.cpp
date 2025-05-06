@@ -521,7 +521,7 @@ void MainWindow::on_btnSendSignal_clicked()
     else    {
         TCPserver = new QTcpServer(this);
 
-        if(TCPserver->listen(QHostAddress::Any, port))  {
+        if(TCPserver->listen(QHostAddress::AnyIPv4, port))  {
             ui->statusbar->showMessage("Serwer nasłuchuje na porcie: " + QString::number(port));
             connect(TCPserver, SIGNAL(newConnection()), this, SLOT(Otrzymaj())); //Przerzucic do konstruktora
             //connect(TCPserver, SIGNAL(disco))
