@@ -21,6 +21,7 @@ public:
     void inicjalizacjaWykresuPID(QVBoxLayout *layout);
     void inicjalizacjaWykresuWartosciSterowania(QVBoxLayout *layout);
     void WykresWartosciZadanej();
+    void WykresWartosciZadanej(double val);
     void WykresWartosciZadanej_siec(double val);
     void WykresUchybu();
     void WykresPID();
@@ -29,6 +30,7 @@ public:
     void InicjalizujWykresy(QVBoxLayout *layout[4]);
     void setSymulator(symulator* sym){s=sym;}
     symulator* getSymulator( ){return s;}
+    double getCzas(){return czas;}
     void wyczyscLayout(QLayout* layout);
     void ResetCzas(){czas=0;}
     void ResetujWykresy();

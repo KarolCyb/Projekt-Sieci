@@ -18,8 +18,13 @@ double symulator::symulujKrok(double czas) {
     setLastObjectOutput(wyjscieObiektu);
     return wyjscieObiektu;
 }
-double symulator::symuluj2(double sygnalSterowania)
+
+double symulator::symuluj2(double sygnalSterowania,double czas)
 {
+    double wartoscZadana = generator.generuj(czas);
+    regulator.setWartoscZadana(wartoscZadana);
+    regulator.aktualizujUchyb(wyjscieObiektu);
+    regulator.obliczSterowanie();
     wyjscieObiektu = obiekt.obliczWyjscie(sygnalSterowania);
     setLastRegulatorValue(sygnalSterowania);
     setLastObjectOutput(wyjscieObiektu);

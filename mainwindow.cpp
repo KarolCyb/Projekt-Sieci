@@ -45,11 +45,8 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
 }
 void MainWindow::dane_i_wykresy()
 {
+    wykres->getSymulator()->symulujKrok(wykres->getCzas());
     wykres->WykresWartosciZadanej();
-    wykres->WykresUchybu();
-    wykres->WykresPID();
-    wykres->WykresWartosciSterowania();
-
     if(TCPpolaczenie != nullptr)
     {
         //przyklad
@@ -59,6 +56,11 @@ void MainWindow::dane_i_wykresy()
 
         ui->test_lbl->setText("WYS");
     }
+    wykres->WykresUchybu();
+    wykres->WykresPID();
+    wykres->WykresWartosciSterowania();
+
+
 }
 
 void MainWindow::odczyt()
@@ -68,7 +70,7 @@ void MainWindow::odczyt()
     QByteArray dane_siec;
     dane_siec = TCPpolaczenie->read(8);
     double val = dane_siec.toDouble();
-    double wyjscie = usluga->getSymulator()->symuluj2(val);
+    double wyjscie = usluga->getSymulator()->symuluj2(val,wykres->getCzas());
     qDebug()<< val<< " "<<" "<<usluga->getSymulator()->getObiektARX().getWielomianA().size()<<" "<<wyjscie;
     wykres->WykresWartosciZadanej_siec(wyjscie);
     wykres->AktualizujWykresy();

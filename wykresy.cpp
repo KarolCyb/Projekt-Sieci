@@ -134,8 +134,7 @@ void Wykresy::inicjalizacjaWykresuWartosciSterowania(QVBoxLayout *layout){
     osY[3]->setTitleText("Wartość Ster");
 }
 void Wykresy::WykresWartosciZadanej() {
-    double wyjscieObiektu = s->symulujKrok(czas);
-    seria[0]->append(czas, wyjscieObiektu);
+    seria[0]->append(czas, s->getWyjscieObiektu());
     seria[1]->append(czas, s->getWartoscZadana());
 
     const int maxPoints = 1000;
@@ -172,6 +171,7 @@ void Wykresy::WykresWartosciZadanej() {
 
 }
 
+
 void Wykresy::WykresWartosciZadanej_siec(double val) {
     double wyjscieObiektu = val;
     seria[0]->append(czas, wyjscieObiektu);
@@ -207,13 +207,11 @@ void Wykresy::WykresWartosciZadanej_siec(double val) {
     }
     double margin = (maxY - minY) * 0.1;
     osY[0]->setRange(minY - margin, maxY + margin);
-    czas++;
+    czas+=4;
 
 }
 
 void Wykresy::WykresUchybu() {
-    double wyjscieObiektu = s->symulujKrok(czas);
-    Q_UNUSED(wyjscieObiektu);
     double uchyb = s->getRegulator().getUchyb();
     seria[2]->append(czas, uchyb);
     const int maxPoints = 400;
@@ -239,8 +237,6 @@ void Wykresy::WykresUchybu() {
 }
 
 void Wykresy::WykresPID() {
-    double wyjscieObiektu = s->symulujKrok(czas);
-    Q_UNUSED(wyjscieObiektu);
     Regulator regulator = s->getRegulator();
     seria[3]->append(czas, regulator.getNastawaP());
     seria[4]->append(czas, regulator.getNastawaI());
@@ -279,8 +275,6 @@ void Wykresy::WykresPID() {
     czas++;
 }
 void Wykresy::WykresWartosciSterowania(){
-    double wyjscieObiektu = s->symulujKrok(czas);
-    Q_UNUSED(wyjscieObiektu);
     double Sterujaca = s->getRegulator().getWartoscSterujaca();
     seria[6]->append(czas, Sterujaca);
 
