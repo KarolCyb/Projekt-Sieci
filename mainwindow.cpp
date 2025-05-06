@@ -59,8 +59,7 @@ void MainWindow::dane_i_wykresy()
     wykres->WykresUchybu();
     wykres->WykresPID();
     wykres->WykresWartosciSterowania();
-
-
+    wykres->krok();
 }
 
 void MainWindow::odczyt()

@@ -167,7 +167,6 @@ void Wykresy::WykresWartosciZadanej() {
     }
     double margin = (maxY - minY) * 0.1;
     osY[0]->setRange(minY - margin, maxY + margin);
-    czas++;
 
 }
 
@@ -272,7 +271,6 @@ void Wykresy::WykresPID() {
     if (osY[2]->min() != minY || osY[2]->max() != maxY) {
         osY[2]->setRange(minY, maxY);
     }
-    czas++;
 }
 void Wykresy::WykresWartosciSterowania(){
     double Sterujaca = s->getRegulator().getWartoscSterujaca();
@@ -298,7 +296,6 @@ void Wykresy::WykresWartosciSterowania(){
 
     double margin = std::max(0.1 * (maxY - minY), 0.01);
     osY[3]->setRange(minY - margin, maxY + margin);
-    czas++;
 }
 
 void Wykresy::ResetujWykresy(){
