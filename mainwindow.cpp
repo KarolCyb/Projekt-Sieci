@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     ui->chkServer->setVisible(0);
     ui->letIP->setVisible(0);
     ui->sbxPort->setVisible(0);
+    ui->chkObustronneTaktowanie->setVisible(0);
     /*connect(simulationTimer, &QTimer::timeout, this, [=]() {
         wykres->WykresWartosciZadanej();
     });
@@ -70,6 +71,7 @@ void MainWindow::dane_i_wykresy()
 
 void MainWindow::odczyt()
 {
+    qInfo() << wykres->getCzas();
     ui->test_lbl->clear();
     ui->test_lbl->setText("OT");
     QByteArray dane_siec;
@@ -601,11 +603,13 @@ void MainWindow::on_btnRozlacz_clicked()
 }
 
 
-
 void MainWindow::on_chkServer_stateChanged(int arg1)
 {
     if(ui->letIP->isVisible()) ui->letIP->setVisible(0);
     else ui->letIP->setVisible(1);
+
+    if(ui->chkObustronneTaktowanie->isVisible()) ui->chkObustronneTaktowanie->setVisible(0);
+    else ui->chkObustronneTaktowanie->setVisible(1);
 }
 
 
@@ -621,6 +625,7 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
         ui->chkServer->setVisible(0);
         ui->letIP->setVisible(0);
         ui->sbxPort->setVisible(0);
+        ui->chkObustronneTaktowanie->setVisible(0);
 
         ui->Sposob->setEnabled(1);
         ui->Interwal->setEnabled(1);
@@ -643,6 +648,16 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
         ui->chkServer->setVisible(1);
         ui->letIP->setVisible(1);
         ui->sbxPort->setVisible(1);
+        if(ui->chkServer->isChecked()){
+            ui->chkServer->setChecked(false);
+            if(ui->letIP->isVisible()) ui->letIP->setVisible(0);
+            else ui->letIP->setVisible(1);
+
+            if(ui->chkObustronneTaktowanie->isVisible()) ui->chkObustronneTaktowanie->setVisible(0);
+            else ui->chkObustronneTaktowanie->setVisible(1);
+        }
+        ui->chkObustronneTaktowanie->setVisible(1);
+
 
         ui->Sposob->setEnabled(0);
         ui->Interwal->setEnabled(0);
@@ -658,5 +673,7 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
         ui->Zapisz->setEnabled(0);
         ui->Wczytaj->setEnabled(0);
     }
+
+
 }
 
