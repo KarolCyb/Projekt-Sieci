@@ -54,7 +54,11 @@ void MainWindow::dane_i_wykresy()
     }
     if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked())
     {
-        wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
+        if(wykres->getSymulator()->getFlag())
+        {
+            wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
+        }
+        wykres->getSymulator()->setFlag(false);
         //przyklad
         QByteArray dane_siec;
         dane_siec = QByteArray::number(usluga->getSymulator()->getLastRegulatorValue());
@@ -81,9 +85,6 @@ void MainWindow::odczyt()
     //TCPpolaczenie->flush();
     wykres->getSymulator()->setLastRegulatorValue(val);
     double wyjscie = wykres->getSymulator()->symuluj_wyjscie(wykres->getCzas());
-    //qDebug()<< val<< " "<<" "<<usluga->getSymulator()->getObiektARX().getWielomianA().size()<<" "<<wyjscie;
-    //wykres->setCzas(time);
-    //wykres->getSymulator()->setWyjscieObiektu(wyjscie);
     wykres->WykresWartosciZadanej();
     wykres->AktualizujWykresy();
     wykres->krok();
@@ -99,8 +100,7 @@ void MainWindow::odczyt_klient()
     double val_wyj = dane_siec.toDouble();
     wykres->getSymulator()->setWyjscieObiektu(val_wyj);
     wykres->getSymulator()->setLastObjectOutput(val_wyj);
-
-    qDebug()<<wykres->getSymulator()->getLastObjectOutput();
+    wykres->getSymulator()->setFlag(true);
     wykres->WykresWartosciZadanej();
     wykres->AktualizujWykresy();
 }

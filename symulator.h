@@ -14,6 +14,7 @@ class symulator
     double wyjscieObiektu = 0;
     double lastRegulatorValue = 0;
     double lastObjectOutput = 0 ;
+    bool flaga = true;
 public:
     symulator();
     symulator(Generator g, Regulator r, ObiektARX o);
@@ -37,7 +38,8 @@ public:
     void setWyjscieObiektu(double wo){wyjscieObiektu=wo;};
     void setObiektARXzHistoria(ObiektARX &o);
     void setRegulatorzHistoria(Regulator &r);
-
+    bool getFlag(){return flaga;}
+    void setFlag(bool wart){flaga = wart;}
 };
 
 #endif // SYMULATOR_H
