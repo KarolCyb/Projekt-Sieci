@@ -35,7 +35,8 @@ public:
     ~MainWindow();
     void UstawienieWygladuGUI();
     void UstawienieOkienOrazSygnalowIslotow();
-
+    bool getWyslijInterwal() {return wyslij_interwal;}
+    void setWyslijInterwal(bool set){wyslij_interwal = set;}
 private slots:
     void on_Start_clicked();
     void on_Stop_clicked();
@@ -90,5 +91,6 @@ private:
     QTcpServer* TCPserver;
     std::chrono::time_point<std::chrono::high_resolution_clock> start_m;
     std::chrono::time_point<std::chrono::high_resolution_clock> end_m;
+    bool wyslij_interwal = true;
 };
 #endif // MAINWINDOW_H

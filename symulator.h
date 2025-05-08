@@ -15,6 +15,7 @@ class symulator
     double lastRegulatorValue = 0;
     double lastObjectOutput = 0 ;
     bool flaga = true;
+    bool flaga_synchro = true;
 public:
     symulator();
     symulator(Generator g, Regulator r, ObiektARX o);
@@ -40,6 +41,8 @@ public:
     void setRegulatorzHistoria(Regulator &r);
     bool getFlag(){return flaga;}
     void setFlag(bool wart){flaga = wart;}
+    bool getFlagSynchro(){return flaga_synchro;}
+    void setFlagSynchro(bool wart){flaga_synchro = wart;}
 };
 
 #endif // SYMULATOR_H
