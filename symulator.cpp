@@ -19,18 +19,22 @@ double symulator::symulujKrok(double czas) {
     return wyjscieObiektu;
 }
 
-double symulator::symuluj2(double sygnalSterowania,double czas)
+double symulator::symuluj_bez_wyjscia(double czas)
 {
     double wartoscZadana = generator.generuj(czas);
     regulator.setWartoscZadana(wartoscZadana);
     regulator.aktualizujUchyb(wyjscieObiektu);
-    regulator.obliczSterowanie();
-    wyjscieObiektu = obiekt.obliczWyjscie(sygnalSterowania);
+    double sygnalSterowania = regulator.obliczSterowanie();
+
     setLastRegulatorValue(sygnalSterowania);
+    return sygnalSterowania;
+}
+double symulator::symuluj_wyjscie(double czas)
+{
+    wyjscieObiektu = obiekt.obliczWyjscie(this->getLastRegulatorValue());
     setLastObjectOutput(wyjscieObiektu);
     return wyjscieObiektu;
 }
-
 double symulator::getWartoscZadana() { return regulator.getWartoscZadana(); }
 double symulator::getZaklocenie() { return obiekt.getZaklocenie(); }
 double symulator::getSterowanie() { return regulator.getWartoscSterujaca(); }

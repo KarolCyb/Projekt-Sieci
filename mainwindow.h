@@ -63,6 +63,7 @@ private slots:
 
     void dane_i_wykresy();
     void odczyt();
+    void odczyt_klient();
     void on_btnRozlacz_clicked();
 
     void on_chkServer_stateChanged(int arg1);

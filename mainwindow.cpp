@@ -46,19 +46,19 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
 }
 void MainWindow::dane_i_wykresy()
 {
-    wykres->getSymulator()->symulujKrok(wykres->getCzas());
+
     if(TCPpolaczenie == nullptr)
     {
+        wykres->getSymulator()->symulujKrok(wykres->getCzas());
         wykres->WykresWartosciZadanej();
     }
-    if(TCPpolaczenie != nullptr)
+    if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked())
     {
+        wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
         //przyklad
         QByteArray dane_siec;
         dane_siec = QByteArray::number(usluga->getSymulator()->getLastRegulatorValue());
         TCPpolaczenie->write(dane_siec);
-        //dane_siec = QByteArray::number(wykres->getCzas());
-       // TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
 
         ui->test_lbl->setText("WYS");
@@ -71,7 +71,6 @@ void MainWindow::dane_i_wykresy()
 
 void MainWindow::odczyt()
 {
-    qInfo() << wykres->getCzas();
     ui->test_lbl->clear();
     ui->test_lbl->setText("OT");
     QByteArray dane_siec;
@@ -80,29 +79,31 @@ void MainWindow::odczyt()
     //dane_siec = TCPpolaczenie->read(8);
     //int time = dane_siec.toDouble();
     //TCPpolaczenie->flush();
-    if(ui->chkServer->isChecked()){
-        double wyjscie = wykres->getSymulator()->symuluj2(val,wykres->getCzas());
-        //qDebug()<< val<< " "<<" "<<usluga->getSymulator()->getObiektARX().getWielomianA().size()<<" "<<wyjscie;
-        //wykres->setCzas(time);
-        wykres->getSymulator()->setWyjscieObiektu(wyjscie);
-        wykres->WykresWartosciZadanej();
-        wykres->AktualizujWykresy();
-        wykres->krok();
-        QByteArray dane_siec_wyj = QByteArray::number(wyjscie);
-        TCPpolaczenie->write(dane_siec_wyj);
-        TCPpolaczenie->flush();
-    }
-    if(!ui->chkServer->isChecked())
-    {
-        //Nie dziala
-        qDebug()<<val;
-        wykres->getSymulator()->setWyjscieObiektu(val);
-        wykres->getSymulator()->setLastObjectOutput(val);
-        wykres->WykresWartosciZadanej();
-        wykres->AktualizujWykresy();
-    }
-}
+    wykres->getSymulator()->setLastRegulatorValue(val);
+    double wyjscie = wykres->getSymulator()->symuluj_wyjscie(wykres->getCzas());
+    //qDebug()<< val<< " "<<" "<<usluga->getSymulator()->getObiektARX().getWielomianA().size()<<" "<<wyjscie;
+    //wykres->setCzas(time);
+    //wykres->getSymulator()->setWyjscieObiektu(wyjscie);
+    wykres->WykresWartosciZadanej();
+    wykres->AktualizujWykresy();
+    wykres->krok();
+    QByteArray dane_siec_wyj = QByteArray::number(wyjscie);
+    TCPpolaczenie->write(dane_siec_wyj);
+    TCPpolaczenie->flush();
 
+}
+void MainWindow::odczyt_klient()
+{
+    QByteArray dane_siec;
+    dane_siec = TCPpolaczenie->read(8);
+    double val_wyj = dane_siec.toDouble();
+    wykres->getSymulator()->setWyjscieObiektu(val_wyj);
+    wykres->getSymulator()->setLastObjectOutput(val_wyj);
+
+    qDebug()<<wykres->getSymulator()->getLastObjectOutput();
+    wykres->WykresWartosciZadanej();
+    wykres->AktualizujWykresy();
+}
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -536,7 +537,7 @@ void MainWindow::on_btnSendSignal_clicked()
                     ui->statusbar->showMessage("Otrzymano połączenie z serwerem " + address.toString() + " na porcie:  " +  QString::number(port));
                     ui->btnSendSignal->setEnabled(0);
                     ui->btnRozlacz->setEnabled(1);
-                    connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt);
+                    connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt_klient);
                 }
                 else    {
                     QMessageBox::information(this, "Informacja", "Błąd połączenia");
