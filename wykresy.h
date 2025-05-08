@@ -22,7 +22,6 @@ public:
     void inicjalizacjaWykresuWartosciSterowania(QVBoxLayout *layout);
     void WykresWartosciZadanej();
     void WykresWartosciZadanej(double val);
-    void WykresWartosciZadanej_siec(double val);
     void WykresUchybu();
     void WykresPID();
     void WykresWartosciSterowania();

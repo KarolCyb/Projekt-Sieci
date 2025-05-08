@@ -583,6 +583,8 @@ void MainWindow::Otrzymaj() {
 
 void MainWindow::on_btnRozlacz_clicked()
 {
+    ui->label_color->setStyleSheet("QLabel{background-color : transparent;}");
+    ui->ms_label->setText("");
     if(TCPpolaczenie != nullptr)
     {
         if(TCPpolaczenie->isOpen())
@@ -615,8 +617,8 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
     if(ui->letIP->isVisible()) ui->letIP->setVisible(0);
     else ui->letIP->setVisible(1);
 
-    if(ui->chkObustronneTaktowanie->isVisible()) ui->chkObustronneTaktowanie->setVisible(0);
-    else ui->chkObustronneTaktowanie->setVisible(1);
+    //if(ui->chkObustronneTaktowanie->isVisible()) ui->chkObustronneTaktowanie->setVisible(0);
+    //else ui->chkObustronneTaktowanie->setVisible(1);
 
     if(ui->chkServer->isChecked())
     {
@@ -689,8 +691,8 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
             if(ui->letIP->isVisible()) ui->letIP->setVisible(0);
             else ui->letIP->setVisible(1);
 
-            if(ui->chkObustronneTaktowanie->isVisible()) ui->chkObustronneTaktowanie->setVisible(0);
-            else ui->chkObustronneTaktowanie->setVisible(1);
+            //if(ui->chkObustronneTaktowanie->isVisible()) ui->chkObustronneTaktowanie->setVisible(0);
+            //else ui->chkObustronneTaktowanie->setVisible(1);
         }
         ui->chkObustronneTaktowanie->setVisible(1);
 
