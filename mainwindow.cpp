@@ -149,6 +149,7 @@ void MainWindow::odczyt_klient()
         wykres->WykresWartosciZadanej();
         wykres->AktualizujWykresy();
 
+
         ui->ms_label->setText(QString::number(duration.count())+" ms");
     }
     else if(ui->chkObustronneTaktowanie->isChecked())
@@ -167,6 +168,7 @@ void MainWindow::odczyt_klient()
 
         ui->ms_label->setText(QString::number(duration.count())+" ms");
     }
+
 }
 MainWindow::~MainWindow()
 {
@@ -643,30 +645,44 @@ void MainWindow::Otrzymaj() {
 
 void MainWindow::on_btnRozlacz_clicked()
 {
-    ui->label_color->setStyleSheet("QLabel{background-color : transparent;}");
-    ui->ms_label->setText("");
-    if(TCPpolaczenie != nullptr)
-    {
-        if(TCPpolaczenie->isOpen())
-        {
-            ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
-            TCPpolaczenie->disconnectFromHost();
-            TCPpolaczenie->close();
-            ui->btnSendSignal->setEnabled(1);
-            ui->btnRozlacz->setEnabled(0);
-            TCPpolaczenie = nullptr;
-        }
-    }
-    if(TCPserver != nullptr)
-    {
-        if(TCPserver->isListening())
-        {
-            TCPserver->close();
+    QMessageBox potwierdzenie(this);
+    potwierdzenie.setWindowTitle("Rozłącz..");
+    potwierdzenie.setText("Czy chcesz zakończyć połączenie?");
+    potwierdzenie.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    potwierdzenie.setWindowModality(Qt::ApplicationModal);
 
-            ui->statusbar->showMessage("Server zakończył prace");
-            ui->btnSendSignal->setEnabled(1);
-            ui->btnRozlacz->setEnabled(0);
-            TCPserver = nullptr;
+    int wynik = potwierdzenie.exec();
+
+    if( wynik == QMessageBox::No)    {
+        return;
+    }
+    else    {
+
+        ui->label_color->setStyleSheet("QLabel{background-color : transparent;}");
+        //ui->ms_label->setText("");
+        if(TCPpolaczenie != nullptr)
+        {
+            if(TCPpolaczenie->isOpen())
+            {
+                ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
+                TCPpolaczenie->disconnectFromHost();
+                TCPpolaczenie->close();
+                ui->btnSendSignal->setEnabled(1);
+                ui->btnRozlacz->setEnabled(0);
+                TCPpolaczenie = nullptr;
+            }
+        }
+        if(TCPserver != nullptr)
+        {
+            if(TCPserver->isListening())
+            {
+                TCPserver->close();
+
+                ui->statusbar->showMessage("Server zakończył prace");
+                ui->btnSendSignal->setEnabled(1);
+                ui->btnRozlacz->setEnabled(0);
+                TCPserver = nullptr;
+            }
         }
     }
 }
@@ -790,6 +806,6 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
         ui->Wczytaj->setEnabled(0);
     }
 
-
 }
+
 
