@@ -57,8 +57,9 @@ void MainWindow::dane_i_wykresy()
         if(wykres->getSymulator()->getFlag())
         {
             wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
+            start_m = std::chrono::high_resolution_clock::now();
+            wykres->getSymulator()->setFlag(false);
         }
-        wykres->getSymulator()->setFlag(false);
         //przyklad
         QByteArray dane_siec;
         dane_siec = QByteArray::number(usluga->getSymulator()->getLastRegulatorValue());
@@ -70,6 +71,8 @@ void MainWindow::dane_i_wykresy()
     wykres->WykresPID();
     wykres->WykresWartosciSterowania();
     wykres->krok();
+    wykres->AktualizujWykresy();
+    //sinus po sieci nie dziala jak powinien
 }
 
 void MainWindow::odczyt()
@@ -82,9 +85,9 @@ void MainWindow::odczyt()
     //TCPpolaczenie->flush();
     wykres->getSymulator()->setLastRegulatorValue(val);
     double wyjscie = wykres->getSymulator()->symuluj_wyjscie(wykres->getCzas());
-    wykres->WykresWartosciZadanej();
-    wykres->AktualizujWykresy();
-    wykres->krok();
+    //wykres->WykresWartosciZadanej();
+    //wykres->AktualizujWykresy();
+    //wykres->krok();
     QByteArray dane_siec_wyj = QByteArray::number(wyjscie);
     TCPpolaczenie->write(dane_siec_wyj);
     TCPpolaczenie->flush();
@@ -95,12 +98,16 @@ void MainWindow::odczyt_klient()
     QByteArray dane_siec;
     dane_siec = TCPpolaczenie->read(8);
     double val_wyj = dane_siec.toDouble();
+    end_m = std::chrono::high_resolution_clock::now();
     wykres->getSymulator()->setWyjscieObiektu(val_wyj);
     wykres->getSymulator()->setLastObjectOutput(val_wyj);
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_m - start_m);
     wykres->getSymulator()->setFlag(true);
     ui->label_color->setStyleSheet("QLabel{background-color : green;}");
     wykres->WykresWartosciZadanej();
     wykres->AktualizujWykresy();
+
+    ui->ms_label->setText(QString::number(duration.count())+" ms");
 }
 MainWindow::~MainWindow()
 {
@@ -468,6 +475,7 @@ void MainWindow::on_Interwal_editingFinished()
 {
     int interwal = ui->Interwal->text().toInt();
     if(interwal>0){
+
         interwalCzasowy=interwal;
     }
 }

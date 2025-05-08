@@ -17,7 +17,7 @@
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QTcpServer>
-
+#include <chrono>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -88,5 +88,7 @@ private:
     QHostAddress address;
     int port;
     QTcpServer* TCPserver;
+    std::chrono::time_point<std::chrono::high_resolution_clock> start_m;
+    std::chrono::time_point<std::chrono::high_resolution_clock> end_m;
 };
 #endif // MAINWINDOW_H
