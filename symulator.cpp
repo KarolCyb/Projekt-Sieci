@@ -29,7 +29,7 @@ double symulator::symuluj_bez_wyjscia(double czas)
     setLastRegulatorValue(sygnalSterowania);
     return sygnalSterowania;
 }
-double symulator::symuluj_wyjscie(double czas)
+double symulator::symuluj_wyjscie()
 {
     wyjscieObiektu = obiekt.obliczWyjscie(this->getLastRegulatorValue());
     setLastObjectOutput(wyjscieObiektu);

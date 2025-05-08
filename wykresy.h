@@ -21,7 +21,7 @@ public:
     void inicjalizacjaWykresuPID(QVBoxLayout *layout);
     void inicjalizacjaWykresuWartosciSterowania(QVBoxLayout *layout);
     void WykresWartosciZadanej();
-    void WykresWartosciZadanej(double val);
+    void WykresWartosciZadanej(int val);
     void WykresUchybu();
     void WykresPID();
     void WykresWartosciSterowania();
@@ -29,7 +29,7 @@ public:
     void InicjalizujWykresy(QVBoxLayout *layout[4]);
     void setSymulator(symulator* sym){s=sym;}
     symulator* getSymulator( ){return s;}
-    double getCzas(){return czas;}
+    int getCzas(){return czas;}
     void setCzas(int czasInt) {czas = czasInt; }
     void krok(){czas++;}
     void wyczyscLayout(QLayout* layout);
@@ -41,7 +41,7 @@ private:
     QValueAxis *osX[4]= {nullptr};
     QValueAxis *osY[4]= {nullptr};
     QChartView *Widok[4]= {nullptr};
-    double czas;
+    int czas;
     QWidget* parent;
     symulator* s;
 signals:
