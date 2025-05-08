@@ -610,6 +610,35 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
 
     if(ui->chkObustronneTaktowanie->isVisible()) ui->chkObustronneTaktowanie->setVisible(0);
     else ui->chkObustronneTaktowanie->setVisible(1);
+
+    if(ui->chkServer->isChecked())
+    {
+        ui->UstawieniaObiektuARX->setEnabled(1);
+        ui->Sposob->setEnabled(0);
+        ui->Interwal->setEnabled(0);
+        ui->RodzajSygnalu->setEnabled(0);
+        ui->Amplituda->setEnabled(0);
+        ui->Wypelnienie->setEnabled(0);
+        ui->CzasAktywacji->setEnabled(0);
+        ui->Okres->setEnabled(0);
+        ui->Wzmocnienie->setEnabled(0);
+        ui->StalaI->setEnabled(0);
+        ui->StalaD->setEnabled(0);
+    }
+    if(!ui->chkServer->isChecked())
+    {
+        ui->UstawieniaObiektuARX->setEnabled(0);
+        ui->Sposob->setEnabled(1);
+        ui->Interwal->setEnabled(1);
+        ui->RodzajSygnalu->setEnabled(1);
+        ui->Amplituda->setEnabled(1);
+        ui->Wypelnienie->setEnabled(1);
+        ui->CzasAktywacji->setEnabled(1);
+        ui->Okres->setEnabled(1);
+        ui->Wzmocnienie->setEnabled(1);
+        ui->StalaI->setEnabled(1);
+        ui->StalaD->setEnabled(1);
+    }
 }
 
 
@@ -658,18 +687,36 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
         }
         ui->chkObustronneTaktowanie->setVisible(1);
 
+        if(ui->chkServer->isChecked())
+        {
+            ui->UstawieniaObiektuARX->setEnabled(1);
+            ui->Sposob->setEnabled(0);
+            ui->Interwal->setEnabled(0);
+            ui->RodzajSygnalu->setEnabled(0);
+            ui->Amplituda->setEnabled(0);
+            ui->Wypelnienie->setEnabled(0);
+            ui->CzasAktywacji->setEnabled(0);
+            ui->Okres->setEnabled(0);
+            ui->Wzmocnienie->setEnabled(0);
+            ui->StalaI->setEnabled(0);
+            ui->StalaD->setEnabled(0);
+        }
+        if(!ui->chkServer->isChecked())
+        {
+            ui->UstawieniaObiektuARX->setEnabled(0);
+            ui->Sposob->setEnabled(1);
+            ui->Interwal->setEnabled(1);
+            ui->RodzajSygnalu->setEnabled(1);
+            ui->Amplituda->setEnabled(1);
+            ui->Wypelnienie->setEnabled(1);
+            ui->CzasAktywacji->setEnabled(1);
+            ui->Okres->setEnabled(1);
+            ui->Wzmocnienie->setEnabled(1);
+            ui->StalaI->setEnabled(1);
+            ui->StalaD->setEnabled(1);
+        }
 
-        ui->Sposob->setEnabled(0);
-        ui->Interwal->setEnabled(0);
-        ui->RodzajSygnalu->setEnabled(0);
-        ui->Amplituda->setEnabled(0);
-        ui->Wypelnienie->setEnabled(0);
-        ui->CzasAktywacji->setEnabled(0);
-        ui->Okres->setEnabled(0);
-        ui->Wzmocnienie->setEnabled(0);
-        ui->StalaI->setEnabled(0);
-        ui->StalaD->setEnabled(0);
-        ui->UstawieniaObiektuARX->setEnabled(0);
+
         ui->Zapisz->setEnabled(0);
         ui->Wczytaj->setEnabled(0);
     }
