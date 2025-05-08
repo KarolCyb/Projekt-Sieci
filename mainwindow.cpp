@@ -75,31 +75,51 @@ void MainWindow::odczyt()
     ui->test_lbl->clear();
     ui->test_lbl->setText("OT");
     QByteArray dane_siec;
+    QByteArray probki; // tablica bitowa na czas
+    probki = QString::number(wykres->getCzas()).toUtf8();
     dane_siec = TCPpolaczenie->read(8);
     double val = dane_siec.toDouble();
     //dane_siec = TCPpolaczenie->read(8);
     //int time = dane_siec.toDouble();
     //TCPpolaczenie->flush();
-    if(ui->chkServer->isChecked()){
-        double wyjscie = wykres->getSymulator()->symuluj2(val,wykres->getCzas());
-        //qDebug()<< val<< " "<<" "<<usluga->getSymulator()->getObiektARX().getWielomianA().size()<<" "<<wyjscie;
-        //wykres->setCzas(time);
-        wykres->getSymulator()->setWyjscieObiektu(wyjscie);
-        wykres->WykresWartosciZadanej();
-        wykres->AktualizujWykresy();
-        wykres->krok();
-        QByteArray dane_siec_wyj = QByteArray::number(wyjscie);
-        TCPpolaczenie->write(dane_siec_wyj);
-        TCPpolaczenie->flush();
+    if(!ui->chkObustronneTaktowanie->isChecked())   {
+        if(ui->chkServer->isChecked()){
+            double wyjscie = wykres->getSymulator()->symuluj2(val,wykres->getCzas());  //zwraca wyjście serwera na klienta i wyśiwetla na serwerze
+            //qDebug()<< val<< " "<<" "<<usluga->getSymulator()->getObiektARX().getWielomianA().size()<<" "<<wyjscie;
+            //wykres->setCzas(time);
+            wykres->getSymulator()->setWyjscieObiektu(wyjscie);
+            wykres->WykresWartosciZadanej();
+            wykres->AktualizujWykresy();
+            wykres->krok();
+            QByteArray dane_siec_wyj = QByteArray::number(wyjscie);
+            TCPpolaczenie->write(dane_siec_wyj);
+            TCPpolaczenie->flush();
+        }
+        else if(!ui->chkServer->isChecked())
+        {
+            //Nie dziala
+            qDebug() << val;
+            wykres->getSymulator()->setWyjscieObiektu(val);
+            wykres->getSymulator()->setLastObjectOutput(val);
+            wykres->WykresWartosciZadanej();
+            wykres->AktualizujWykresy();
+        }
     }
-    if(!ui->chkServer->isChecked())
-    {
-        //Nie dziala
-        qDebug()<<val;
-        wykres->getSymulator()->setWyjscieObiektu(val);
-        wykres->getSymulator()->setLastObjectOutput(val);
-        wykres->WykresWartosciZadanej();
-        wykres->AktualizujWykresy();
+    else {  //obustronne taktowanie
+        QByteArray dane_siecARX;
+
+        if(!ui->chkObustronneTaktowanie->isChecked())   {
+            if(ui->chkServer->isChecked()){
+                double czas = wykres->getCzas();
+                if(czas != probki)  {
+                   // nwm coś trzeba zrobić zeby sie synchornizowały
+                }
+
+                double wyjscie = wykres->getSymulator()->symuluj2(val, czas);
+                wykres->getSymulator()->setWyjscieObiektu(wyjscie);
+
+            }
+        }
     }
 }
 
@@ -673,7 +693,6 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
         ui->Zapisz->setEnabled(0);
         ui->Wczytaj->setEnabled(0);
     }
-
 
 }
 
