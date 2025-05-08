@@ -64,8 +64,7 @@ void MainWindow::dane_i_wykresy()
         dane_siec = QByteArray::number(usluga->getSymulator()->getLastRegulatorValue());
         TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
-
-        ui->test_lbl->setText("WYS");
+        ui->label_color->setStyleSheet("QLabel{background-color : red;}");
     }
     wykres->WykresUchybu();
     wykres->WykresPID();
@@ -75,8 +74,6 @@ void MainWindow::dane_i_wykresy()
 
 void MainWindow::odczyt()
 {
-    ui->test_lbl->clear();
-    ui->test_lbl->setText("OT");
     QByteArray dane_siec;
     dane_siec = TCPpolaczenie->read(8);
     double val = dane_siec.toDouble();
@@ -101,6 +98,7 @@ void MainWindow::odczyt_klient()
     wykres->getSymulator()->setWyjscieObiektu(val_wyj);
     wykres->getSymulator()->setLastObjectOutput(val_wyj);
     wykres->getSymulator()->setFlag(true);
+    ui->label_color->setStyleSheet("QLabel{background-color : green;}");
     wykres->WykresWartosciZadanej();
     wykres->AktualizujWykresy();
 }
