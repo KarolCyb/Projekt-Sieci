@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
         wykres->WykresWartosciSterowania();
     });*/
     connect(simulationTimer, &QTimer::timeout, this, &MainWindow::dane_i_wykresy);
+
 }
 void MainWindow::dane_i_wykresy()
 {
@@ -119,8 +120,7 @@ void MainWindow::dane_i_wykresy()
 void MainWindow::odczyt()
 {
 
-    connect(TCPserver, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
-    connect(TCPserver, SIGNAL(disconnected()), this, SLOT(errorPolaczenie()));
+
 
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
@@ -187,8 +187,7 @@ void MainWindow::odczyt()
 void MainWindow::odczyt_klient()
 {
 
-    connect(TCPpolaczenie, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
-    connect(TCPpolaczenie, SIGNAL(disconnected()), this, SLOT(errorPolaczenie()));
+
 
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
@@ -228,6 +227,10 @@ void MainWindow::odczyt_klient()
         wykres->AktualizujWykresy();
 
         ui->ms_label->setText(QString::number(duration.count())+" ms");
+        if(wykres->getCzas() > time)
+        {
+            blokada = true;
+        }
     }
 
 }
@@ -667,6 +670,7 @@ void MainWindow::on_btnSendSignal_clicked()
                     ui->btnSendSignal->setEnabled(0);
                     ui->btnRozlacz->setEnabled(1);
                     connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt_klient);
+                    connect(TCPpolaczenie, &QTcpSocket::disconnected, this, &MainWindow::errorPolaczenie);
                 }
                 else    {
                     QMessageBox::information(this, "Informacja", "Błąd połączenia");
@@ -719,6 +723,7 @@ void MainWindow::on_btnRozlacz_clicked()
     }
     else    {
 
+
         ui->label_color->setStyleSheet("QLabel{background-color : transparent;}");
         //ui->ms_label->setText("");
         if(TCPpolaczenie != nullptr)
@@ -745,6 +750,7 @@ void MainWindow::on_btnRozlacz_clicked()
                 TCPserver = nullptr;
             }
         }
+
     }
 }
 
@@ -792,7 +798,7 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
 {
     if(index == 0)  {
 
-        emit on_btnRozlacz_clicked();
+        emit ui->btnRozlacz->clicked();
 
         ui->lblPolaczenie->setVisible(0);
         ui->btnRozlacz->setVisible(0);
@@ -871,9 +877,33 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
 
 void MainWindow::errorPolaczenie(){
 
-    TCPpolaczenie = nullptr;
-    TCPserver = nullptr;
 
+    ui->label_color->setStyleSheet("QLabel{background-color : transparent;}");
+    //ui->ms_label->setText("");
+    if(TCPpolaczenie != nullptr)
+    {
+        if(TCPpolaczenie->isOpen())
+        {
+            ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
+            TCPpolaczenie->disconnectFromHost();
+            TCPpolaczenie->close();
+            ui->btnSendSignal->setEnabled(1);
+            ui->btnRozlacz->setEnabled(0);
+            TCPpolaczenie = nullptr;
+        }
+    }
+    if(TCPserver != nullptr)
+    {
+        if(TCPserver->isListening())
+        {
+            TCPserver->close();
+
+            ui->statusbar->showMessage("Server zakończył prace");
+            ui->btnSendSignal->setEnabled(1);
+            ui->btnRozlacz->setEnabled(0);
+            TCPserver = nullptr;
+        }
+    }
     ui->lblPolaczenie->setVisible(0);
     ui->btnRozlacz->setVisible(0);
     ui->btnSendSignal->setVisible(0);
@@ -900,6 +930,6 @@ void MainWindow::errorPolaczenie(){
     ui->ms_label->setVisible(0);
     ui->label_color->clear();
 
-    QMessageBox::information(this, "Informacja", "Nastąpiło nagłe utracenie połaczenia");
+    //QMessageBox::information(this, "Informacja", "Nastąpiło nagłe utracenie połaczenia");
 }
 
