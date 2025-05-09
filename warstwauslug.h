@@ -31,7 +31,7 @@ public:
     symulator* getSymulator(){return s;};
     void zapiszKonfiguracje();
     void wczytajKonfiguracje();
-    void ResetSymulacji(double &c);
+    void ResetSymulacji();
 signals:
     void PoprawneDane();
     void BledneDane();

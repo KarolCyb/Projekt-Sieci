@@ -13,7 +13,6 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     , ui(new Ui::MainWindow)
     , simulationTimer(new QTimer(this))
     , usluga(prog)
-    , czas(0.0)
 {
     usluga->setGUI(this);
     ui->setupUi(this);
@@ -46,49 +45,74 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
 }
 void MainWindow::dane_i_wykresy()
 {
-
-    if(TCPpolaczenie == nullptr)
-    {
-        wykres->getSymulator()->symulujKrok(wykres->getCzas());
-        wykres->WykresWartosciZadanej();
-    }
-    if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked()  && !ui->chkObustronneTaktowanie->isChecked())
-    {
-        if(wykres->getSymulator()->getFlag())
+    if(!blokada){
+        if(TCPpolaczenie == nullptr)
         {
-            wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
-            start_m = std::chrono::high_resolution_clock::now();
-            wykres->getSymulator()->setFlag(false);
+            wykres->getSymulator()->symulujKrok(wykres->getCzas());
+            wykres->WykresWartosciZadanej();
         }
-        //przyklad
-        QByteArray dane_siec;
-        dane_siec = QByteArray::number(usluga->getSymulator()->getLastRegulatorValue());
-        TCPpolaczenie->write(dane_siec);
-        TCPpolaczenie->flush();
-        ui->label_color->setStyleSheet("QLabel{background-color : red;}");
-    }
-    if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked() && ui->chkObustronneTaktowanie->isChecked())
-    {
-        if(wykres->getSymulator()->getFlag())
+        if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked()  && !ui->chkObustronneTaktowanie->isChecked())
         {
-            wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
-            start_m = std::chrono::high_resolution_clock::now();
-            wykres->getSymulator()->setFlag(false);
+            if(wykres->getSymulator()->getFlag())
+            {
+                wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
+                start_m = std::chrono::high_resolution_clock::now();
+                wykres->getSymulator()->setFlag(false);
+            }
+            //przyklad
+            QByteArray dane_siec;
+            QDataStream out(&dane_siec, QIODevice::WriteOnly);
+            out<<(double)usluga->getSymulator()->getLastRegulatorValue();
+            TCPpolaczenie->write(dane_siec);
+            TCPpolaczenie->flush();
+            ui->label_color->setStyleSheet("QLabel{background-color : red;}");
         }
-        //przyklad
-        QByteArray dane_siec;
-        dane_siec = QByteArray::number(usluga->getSymulator()->getLastRegulatorValue());
-        dane_siec.append(QByteArray::number(wykres->getCzas()));
-        dane_siec.append(QByteArray::number(interwalCzasowy));
-        TCPpolaczenie->write(dane_siec);
-        TCPpolaczenie->flush();
-        ui->label_color->setStyleSheet("QLabel{background-color : red;}");
+        if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked() && ui->chkObustronneTaktowanie->isChecked())
+        {
+            if(wykres->getSymulator()->getFlag())
+            {
+                wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
+                start_m = std::chrono::high_resolution_clock::now();
+                wykres->getSymulator()->setFlag(false);
+            }
+            //przyklad
+            QByteArray dane_siec;
+            QDataStream out(&dane_siec, QIODevice::WriteOnly);
+            out<<(double)usluga->getSymulator()->getLastRegulatorValue();
+            out<<(int)wykres->getCzas();
+            out<<(int)interwalCzasowy;
+            //dane_siec.append(QByteArray::number(wykres->getCzas()));
+            //dane_siec.append(QByteArray::number(interwalCzasowy));
+            //qDebug()<<dane_siec.size();
+            TCPpolaczenie->write(dane_siec);
+            TCPpolaczenie->flush();
+            ui->label_color->setStyleSheet("QLabel{background-color : red;}");
+        }
+        if(TCPpolaczenie != nullptr && ui->chkServer->isChecked() && ui->chkObustronneTaktowanie->isChecked())
+        {
+            double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
+            QByteArray dane_siec_wyj;
+            QDataStream out(&dane_siec_wyj, QIODevice::WriteOnly);
+            out<<(double)wyjscie;
+            out<<(int)wykres->getCzas();
+            TCPpolaczenie->write(dane_siec_wyj);
+            TCPpolaczenie->flush();
+        }
+        wykres->WykresUchybu();
+        wykres->WykresPID();
+        wykres->WykresWartosciSterowania();
+        wykres->krok();
+        wykres->AktualizujWykresy();
     }
-    wykres->WykresUchybu();
-    wykres->WykresPID();
-    wykres->WykresWartosciSterowania();
-    wykres->krok();
-    wykres->AktualizujWykresy();
+    if(blokada)
+    {
+        qDebug()<<"Dziala";
+        QByteArray dane_siec;
+        QDataStream out(&dane_siec, QIODevice::WriteOnly);
+        out<<(double)usluga->getSymulator()->getLastRegulatorValue();
+        out<<(int)wykres->getCzas();
+        out<<(int)interwalCzasowy;
+    }
     //sinus po sieci nie dziala jak powinien
 }
 
@@ -101,8 +125,10 @@ void MainWindow::odczyt()
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
         QByteArray dane_siec;
-        dane_siec = TCPpolaczenie->read(8);
-        double val = dane_siec.toDouble();
+        double val;
+        dane_siec = TCPpolaczenie->readAll();
+        QDataStream in(&dane_siec, QIODevice::ReadOnly);
+        in >> val;
         //dane_siec = TCPpolaczenie->read(8);
         //int time = dane_siec.toDouble();
         //TCPpolaczenie->flush();
@@ -111,28 +137,49 @@ void MainWindow::odczyt()
         //wykres->WykresWartosciZadanej();
         //wykres->AktualizujWykresy();
         //wykres->krok();
-        QByteArray dane_siec_wyj = QByteArray::number(wyjscie);
+        QByteArray dane_siec_wyj;
+        QDataStream out(&dane_siec_wyj, QIODevice::WriteOnly);
+        out<<(double)wyjscie;
         TCPpolaczenie->write(dane_siec_wyj);
         TCPpolaczenie->flush();
      }
     else if(ui->chkObustronneTaktowanie->isChecked())
     {
+        //int time = czas.toInt();
+        //double interwal = interwal_z.toInt();
         QByteArray dane_siec;
+        double val;
+        int time;
+        int interwal;
         dane_siec = TCPpolaczenie->readAll();
-        QByteArray wynik = dane_siec.sliced(0,8);
-        QByteArray czas = dane_siec.sliced(8,4);
-        QByteArray interwal_z = dane_siec.sliced(12,4);
-        double val = wynik.toDouble();
-        int time = czas.toInt();
-        double interwal = interwal_z.toInt();
+        QDataStream in(&dane_siec, QIODevice::ReadOnly);
+        in>>val>>time>>interwal;
 
+        interwalCzasowy=interwal;
+        simulationTimer->setInterval(interwalCzasowy);
         //TCPpolaczenie->flush();
         wykres->getSymulator()->setLastRegulatorValue(val);
         double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
+        if(wyslij_interwal)
+        {
+            simulationTimer->start();
+            wyslij_interwal = false;
+        }
+        if(time > wykres->getCzas())
+        {
+            simulationTimer->start();
+        }
+        if(time < wykres->getCzas())
+        {
+            simulationTimer->stop();
+        }
         //wykres->WykresWartosciZadanej();
         //wykres->AktualizujWykresy();
         //wykres->krok();
-        QByteArray dane_siec_wyj = QByteArray::number(wyjscie);
+        QByteArray dane_siec_wyj;
+        QDataStream out(&dane_siec_wyj, QIODevice::WriteOnly);
+        out<<(double)wyjscie;
+        out<<(int)wykres->getCzas();
         TCPpolaczenie->write(dane_siec_wyj);
         TCPpolaczenie->flush();
     }
@@ -146,8 +193,10 @@ void MainWindow::odczyt_klient()
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
         QByteArray dane_siec;
-        dane_siec = TCPpolaczenie->read(8);
-        double val_wyj = dane_siec.toDouble();
+        double val_wyj;
+        dane_siec = TCPpolaczenie->readAll();
+        QDataStream in(&dane_siec, QIODevice::ReadOnly);
+        in>> val_wyj;
         end_m = std::chrono::high_resolution_clock::now();
         wykres->getSymulator()->setWyjscieObiektu(val_wyj);
         wykres->getSymulator()->setLastObjectOutput(val_wyj);
@@ -163,9 +212,13 @@ void MainWindow::odczyt_klient()
     else if(ui->chkObustronneTaktowanie->isChecked())
     {
         QByteArray dane_siec;
-        dane_siec = TCPpolaczenie->read(8);
-        double val_wyj = dane_siec.toDouble();
+        double val_wyj;
+        int time;
+        dane_siec = TCPpolaczenie->readAll();
+        QDataStream in(&dane_siec, QIODevice::ReadOnly);
+        in >> val_wyj>>time;
         end_m = std::chrono::high_resolution_clock::now();
+        qDebug()<<wykres->getCzas()<<" "<<time;
         wykres->getSymulator()->setWyjscieObiektu(val_wyj);
         wykres->getSymulator()->setLastObjectOutput(val_wyj);
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_m - start_m);
@@ -222,7 +275,7 @@ void MainWindow::on_Reset_clicked() {
     simulationTimer->stop();
     wykres->ResetujWykresy();
     wykres->ResetCzas();
-    usluga->ResetSymulacji(czas);
+    usluga->ResetSymulacji();
     wykres->InicjalizujWykresy(layout);
 }
 

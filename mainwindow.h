@@ -78,7 +78,7 @@ private:
     QTimer *simulationTimer;
     WarstwaUslug* usluga ;
     OknoObiektARX* okno_obiekt;
-    double czas;
+    //int czas;
     int interwalCzasowy=0;
     Wykresy* wykres;
     void UstawienieLayout();
@@ -95,5 +95,6 @@ private:
     std::chrono::time_point<std::chrono::high_resolution_clock> end_m;
 
     bool wyslij_interwal = true;
+    bool blokada = false;
 };
 #endif // MAINWINDOW_H
