@@ -119,9 +119,6 @@ void MainWindow::dane_i_wykresy()
 
 void MainWindow::odczyt()
 {
-
-
-
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
         QByteArray dane_siec;
@@ -186,8 +183,6 @@ void MainWindow::odczyt()
 }
 void MainWindow::odczyt_klient()
 {
-
-
 
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
