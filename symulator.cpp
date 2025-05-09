@@ -35,6 +35,15 @@ double symulator::symuluj_wyjscie()
     setLastObjectOutput(wyjscieObiektu);
     return wyjscieObiektu;
 }
+double symulator::symuluj_w_tle(double czas)
+{
+    double wartoscZadana = generator.generuj(czas);
+    regulator.setWartoscZadana(wartoscZadana);
+    regulator.aktualizujUchyb(wyjscieObiektu);
+    double sygnalSterowania = regulator.obliczSterowanie();
+    return sygnalSterowania;
+
+}
 double symulator::getWartoscZadana() { return regulator.getWartoscZadana(); }
 double symulator::getZaklocenie() { return obiekt.getZaklocenie(); }
 double symulator::getSterowanie() { return regulator.getWartoscSterujaca(); }

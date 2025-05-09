@@ -91,6 +91,7 @@ void MainWindow::dane_i_wykresy()
         }
         if(TCPpolaczenie != nullptr && ui->chkServer->isChecked() && ui->chkObustronneTaktowanie->isChecked())
         {
+            wykres->getSymulator()->symuluj_w_tle(wykres->getCzas());
             double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
             QByteArray dane_siec_wyj;
             QDataStream out(&dane_siec_wyj, QIODevice::WriteOnly);
@@ -107,13 +108,16 @@ void MainWindow::dane_i_wykresy()
     }
     if(blokada)
     {
+        wykres->AktualizujWykresy();
         QByteArray dane_siec;
         QDataStream out(&dane_siec, QIODevice::WriteOnly);
         out<<(double)usluga->getSymulator()->getLastRegulatorValue();
         out<<(int)wykres->getCzas();
         out<<(int)interwalCzasowy;
+        if(TCPpolaczenie != nullptr){
         TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
+        }
     }
     //sinus po sieci nie dziala jak powinien
 }
@@ -165,7 +169,7 @@ void MainWindow::odczyt()
         }
         if(time >= wykres->getCzas())
         {
-            simulationTimer->start();
+            simulationTimer->start(interwalCzasowy);
         }
         if(time < wykres->getCzas())
         {
@@ -227,7 +231,7 @@ void MainWindow::odczyt_klient()
         {
             blokada = true;
         }
-        if(wykres->getCzas() < time)
+        if(wykres->getCzas() <= time)
         {
             blokada = false;
         }
@@ -672,6 +676,7 @@ void MainWindow::on_btnSendSignal_clicked()
                     connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt_klient);
                     connect(TCPpolaczenie, &QTcpSocket::disconnected, this, &MainWindow::errorPolaczenie);
                     ui->cbxZmianaTrybu->setEnabled(false);
+                    tryb_stac = false;
                 }
                 else    {
                     QMessageBox::information(this, "Informacja", "Błąd połączenia");
@@ -688,11 +693,12 @@ void MainWindow::on_btnSendSignal_clicked()
 
         if(TCPserver->listen(QHostAddress::AnyIPv4, port))  {
             ui->statusbar->showMessage("Serwer nasłuchuje na porcie: " + QString::number(port));
-            connect(TCPserver, SIGNAL(newConnection()), this, SLOT(Otrzymaj())); //Przerzucic do konstruktora
+            connect(TCPserver, SIGNAL(newConnection()), this, SLOT(Otrzymaj())); //jest git
             //connect(TCPserver, SIGNAL(disco))
             ui->btnSendSignal->setEnabled(0);
             ui->btnRozlacz->setEnabled(1);
             ui->cbxZmianaTrybu->setEnabled(false);
+            tryb_stac = false;
         }
         else    {
             QMessageBox::information(this, "Informacja", "Błąd servera TCP");
@@ -705,6 +711,7 @@ void MainWindow::Otrzymaj() {
 
     TCPpolaczenie = TCPserver->nextPendingConnection();
     connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt);
+    connect(TCPpolaczenie, &QTcpSocket::disconnected, this, &MainWindow::errorPolaczenie);
     if(TCPserver != nullptr) {
         ui->statusbar->showMessage("Połączono z kilentem o adresie:" + TCPpolaczenie->peerAddress().toString() );
     }
@@ -733,11 +740,11 @@ void MainWindow::on_btnRozlacz_clicked()
             if(TCPpolaczenie->isOpen())
             {
                 ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
-                TCPpolaczenie->disconnectFromHost();
+                //TCPpolaczenie->disconnectFromHost();
                 TCPpolaczenie->close();
                 ui->btnSendSignal->setEnabled(1);
                 ui->btnRozlacz->setEnabled(0);
-                TCPpolaczenie = nullptr;
+                //TCPpolaczenie = nullptr;
             }
         }
         if(TCPserver != nullptr)
@@ -749,10 +756,11 @@ void MainWindow::on_btnRozlacz_clicked()
                 ui->statusbar->showMessage("Server zakończył prace");
                 ui->btnSendSignal->setEnabled(1);
                 ui->btnRozlacz->setEnabled(0);
-                TCPserver = nullptr;
+                //TCPserver = nullptr;
             }
         }
          ui->cbxZmianaTrybu->setEnabled(true);
+        tryb_stac = true;
     }
 }
 
@@ -821,8 +829,10 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
         ui->UstawieniaObiektuARX->setEnabled(1);
         ui->Zapisz->setEnabled(1);
         ui->Wczytaj->setEnabled(1);
+
     }
     else if(index == 1) {
+
         ui->lblPolaczenie->setVisible(1);
         ui->btnRozlacz->setVisible(1);
         ui->btnSendSignal->setVisible(1);
@@ -877,33 +887,10 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
 
 void MainWindow::errorPolaczenie(){
 
-
+    ui->cbxZmianaTrybu->setEnabled(true);
     ui->label_color->setStyleSheet("QLabel{background-color : transparent;}");
     //ui->ms_label->setText("");
-    if(TCPpolaczenie != nullptr)
-    {
-        if(TCPpolaczenie->isOpen())
-        {
-            ui->statusbar->showMessage("Rozłączono z:  " + address.toString());
-            TCPpolaczenie->disconnectFromHost();
-            TCPpolaczenie->close();
-            ui->btnSendSignal->setEnabled(1);
-            ui->btnRozlacz->setEnabled(0);
-            TCPpolaczenie = nullptr;
-        }
-    }
-    if(TCPserver != nullptr)
-    {
-        if(TCPserver->isListening())
-        {
-            TCPserver->close();
-
-            ui->statusbar->showMessage("Server zakończył prace");
-            ui->btnSendSignal->setEnabled(1);
-            ui->btnRozlacz->setEnabled(0);
-            TCPserver = nullptr;
-        }
-    }
+    tryb_stac = true;
     ui->lblPolaczenie->setVisible(0);
     ui->btnRozlacz->setVisible(0);
     ui->btnSendSignal->setVisible(0);
@@ -927,9 +914,20 @@ void MainWindow::errorPolaczenie(){
     ui->Wczytaj->setEnabled(1);
 
     ui->cbxZmianaTrybu->setCurrentIndex(0);
-    ui->ms_label->setVisible(0);
-    ui->label_color->clear();
 
+    ui->ms_label->setVisible(0);
+    emit ui->cbxZmianaTrybu->activated(0);
+
+    ui->btnSendSignal->setEnabled(1);
+    ui->btnRozlacz->setEnabled(0);
+    if(TCPpolaczenie != nullptr) TCPpolaczenie = nullptr;
+    if(TCPserver != nullptr)
+    {
+        TCPserver->close();
+        TCPserver = nullptr;
+    }
+    if(!simulationTimer->isActive()) simulationTimer->start(interwalCzasowy);
+    blokada = false;
     //QMessageBox::information(this, "Informacja", "Nastąpiło nagłe utracenie połaczenia");
 }
 

@@ -96,5 +96,6 @@ private:
 
     bool wyslij_interwal = true;
     bool blokada = false;
+    bool tryb_stac = true;
 };
 #endif // MAINWINDOW_H

@@ -39,6 +39,7 @@ public:
     void setWyjscieObiektu(double wo){wyjscieObiektu=wo;};
     void setObiektARXzHistoria(ObiektARX &o);
     void setRegulatorzHistoria(Regulator &r);
+    double symuluj_w_tle(double czas);
     bool getFlag(){return flaga;}
     void setFlag(bool wart){flaga = wart;}
     bool getFlagSynchro(){return flaga_synchro;}
