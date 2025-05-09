@@ -96,7 +96,7 @@ void MainWindow::odczyt()
 {
 
     //connect(TCPserver, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
-    connect(TCPserver, SIGNAL(disconnected()), this, SLOT(errorPolaczenie()));
+    //connect(TCPserver, SIGNAL(disconnected()), this, SLOT(errorPolaczenie()));
 
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
@@ -141,7 +141,7 @@ void MainWindow::odczyt_klient()
 {
 
     //connect(TCPpolaczenie, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
-    connect(TCPpolaczenie, SIGNAL(disconnected()), this, SLOT(errorPolaczenie()));
+    //connect(TCPpolaczenie, SIGNAL(disconnected()), this, SLOT(errorPolaczenie()));
 
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
