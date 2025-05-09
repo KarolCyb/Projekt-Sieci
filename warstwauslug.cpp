@@ -189,7 +189,7 @@ void WarstwaUslug::wczytajKonfiguracje() {
         s->setObiektARX(obiekt);
     }
 }
-void WarstwaUslug::ResetSymulacji(double &c){
+void WarstwaUslug::ResetSymulacji(){
     symulator* sym = s;
     if (sym) {
         sym->getRegulator().ZerowanieNastawaP();
@@ -210,7 +210,6 @@ void WarstwaUslug::ResetSymulacji(double &c){
 
         ObiektARX obiekt;
         sym->setObiektARX(obiekt);
-        c=0.0;
 
     }
 }
