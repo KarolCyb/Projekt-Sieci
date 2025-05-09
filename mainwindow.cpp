@@ -793,7 +793,8 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
 {
     if(index == 0)  {
 
-        emit ui->btnRozlacz->clicked();
+
+        if(!ui->lblPolaczenie->isHidden())emit ui->btnRozlacz->clicked();
 
         ui->lblPolaczenie->setVisible(0);
         ui->btnRozlacz->setVisible(0);
