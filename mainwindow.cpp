@@ -95,7 +95,8 @@ void MainWindow::dane_i_wykresy()
 void MainWindow::odczyt()
 {
 
-    //connect(TCPpolaczenie, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
+    connect(TCPserver, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
+    connect(TCPserver, SIGNAL(disconnected()), this, SLOT(errorPolaczenie()));
 
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
@@ -139,7 +140,7 @@ void MainWindow::odczyt()
 void MainWindow::odczyt_klient()
 {
 
-    //connect(TCPpolaczenie, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
+    connect(TCPpolaczenie, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
     connect(TCPpolaczenie, SIGNAL(disconnected()), this, SLOT(errorPolaczenie()));
 
     if(!ui->chkObustronneTaktowanie->isChecked())
@@ -816,6 +817,10 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
 }
 
 void MainWindow::errorPolaczenie(){
+
+    TCPpolaczenie = nullptr;
+    TCPserver = nullptr;
+
     ui->lblPolaczenie->setVisible(0);
     ui->btnRozlacz->setVisible(0);
     ui->btnSendSignal->setVisible(0);
