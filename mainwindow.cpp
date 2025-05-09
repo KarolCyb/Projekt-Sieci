@@ -94,6 +94,9 @@ void MainWindow::dane_i_wykresy()
 
 void MainWindow::odczyt()
 {
+
+    //connect(TCPpolaczenie, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
+
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
         QByteArray dane_siec;
@@ -110,7 +113,7 @@ void MainWindow::odczyt()
         QByteArray dane_siec_wyj = QByteArray::number(wyjscie);
         TCPpolaczenie->write(dane_siec_wyj);
         TCPpolaczenie->flush();
-    }
+     }
     else if(ui->chkObustronneTaktowanie->isChecked())
     {
         QByteArray dane_siec;
@@ -135,6 +138,10 @@ void MainWindow::odczyt()
 }
 void MainWindow::odczyt_klient()
 {
+
+    //connect(TCPpolaczenie, SIGNAL(errorOccurred()), this, SLOT(errorPolaczenie()));
+    connect(TCPpolaczenie, SIGNAL(disconnected()), this, SLOT(errorPolaczenie()));
+
     if(!ui->chkObustronneTaktowanie->isChecked())
     {
         QByteArray dane_siec;
@@ -808,4 +815,33 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
 
 }
 
+void MainWindow::errorPolaczenie(){
+    ui->lblPolaczenie->setVisible(0);
+    ui->btnRozlacz->setVisible(0);
+    ui->btnSendSignal->setVisible(0);
+    ui->chkServer->setVisible(0);
+    ui->letIP->setVisible(0);
+    ui->sbxPort->setVisible(0);
+    ui->chkObustronneTaktowanie->setVisible(0);
+
+    ui->Sposob->setEnabled(1);
+    ui->Interwal->setEnabled(1);
+    ui->RodzajSygnalu->setEnabled(1);
+    ui->Amplituda->setEnabled(1);
+    ui->Wypelnienie->setEnabled(1);
+    ui->CzasAktywacji->setEnabled(1);
+    ui->Okres->setEnabled(1);
+    ui->Wzmocnienie->setEnabled(1);
+    ui->StalaI->setEnabled(1);
+    ui->StalaD->setEnabled(1);
+    ui->UstawieniaObiektuARX->setEnabled(1);
+    ui->Zapisz->setEnabled(1);
+    ui->Wczytaj->setEnabled(1);
+
+    ui->cbxZmianaTrybu->setCurrentIndex(0);
+    ui->ms_label->setVisible(0);
+    ui->label_color->clear();
+
+    QMessageBox::information(this, "Informacja", "Nastąpiło nagłe utracenie połaczenia");
+}
 

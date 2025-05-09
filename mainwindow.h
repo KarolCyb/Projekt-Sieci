@@ -71,6 +71,8 @@ private slots:
 
     void on_cbxZmianaTrybu_activated(int index);
 
+    void errorPolaczenie();
+
 private:
     Ui::MainWindow *ui;
     QTimer *simulationTimer;
