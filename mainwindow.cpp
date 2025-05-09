@@ -107,12 +107,13 @@ void MainWindow::dane_i_wykresy()
     }
     if(blokada)
     {
-        qDebug()<<"Dziala";
         QByteArray dane_siec;
         QDataStream out(&dane_siec, QIODevice::WriteOnly);
         out<<(double)usluga->getSymulator()->getLastRegulatorValue();
         out<<(int)wykres->getCzas();
         out<<(int)interwalCzasowy;
+        TCPpolaczenie->write(dane_siec);
+        TCPpolaczenie->flush();
     }
     //sinus po sieci nie dziala jak powinien
 }
@@ -162,7 +163,7 @@ void MainWindow::odczyt()
             simulationTimer->start();
             wyslij_interwal = false;
         }
-        if(time > wykres->getCzas())
+        if(time >= wykres->getCzas())
         {
             simulationTimer->start();
         }
@@ -225,6 +226,10 @@ void MainWindow::odczyt_klient()
         if(wykres->getCzas() > time)
         {
             blokada = true;
+        }
+        if(wykres->getCzas() < time)
+        {
+            blokada = false;
         }
     }
 
@@ -666,6 +671,7 @@ void MainWindow::on_btnSendSignal_clicked()
                     ui->btnRozlacz->setEnabled(1);
                     connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt_klient);
                     connect(TCPpolaczenie, &QTcpSocket::disconnected, this, &MainWindow::errorPolaczenie);
+                    ui->cbxZmianaTrybu->setEnabled(false);
                 }
                 else    {
                     QMessageBox::information(this, "Informacja", "Błąd połączenia");
@@ -686,6 +692,7 @@ void MainWindow::on_btnSendSignal_clicked()
             //connect(TCPserver, SIGNAL(disco))
             ui->btnSendSignal->setEnabled(0);
             ui->btnRozlacz->setEnabled(1);
+            ui->cbxZmianaTrybu->setEnabled(false);
         }
         else    {
             QMessageBox::information(this, "Informacja", "Błąd servera TCP");
@@ -745,7 +752,7 @@ void MainWindow::on_btnRozlacz_clicked()
                 TCPserver = nullptr;
             }
         }
-
+         ui->cbxZmianaTrybu->setEnabled(true);
     }
 }
 
@@ -792,9 +799,6 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
 void MainWindow::on_cbxZmianaTrybu_activated(int index)
 {
     if(index == 0)  {
-
-        emit ui->btnRozlacz->clicked();
-
         ui->lblPolaczenie->setVisible(0);
         ui->btnRozlacz->setVisible(0);
         ui->btnSendSignal->setVisible(0);
