@@ -169,6 +169,42 @@ void Wykresy::WykresWartosciZadanej() {
     osY[0]->setRange(minY - margin, maxY + margin);
 
 }
+void Wykresy::WykresWartosciZadanej_no_base() {
+    seria[0]->append(czas, s->getWyjscieObiektu());
+    //seria[1]->append(czas, s->getWartoscZadana());
+
+    const int maxPoints = 1000;
+    if (seria[0]->count() > maxPoints) {
+        seria[0]->remove(0);
+        //seria[1]->remove(0);
+    }
+
+    if (czas > maxPoints) {
+        osX[0]->setRange(czas - maxPoints, czas);
+    }
+
+    Generator generator = s->getGenerator();
+    double minY = std::numeric_limits<double>::max();
+    double maxY = std::numeric_limits<double>::lowest();
+
+    for (int i = 0; i < seria[0]->count(); ++i) {
+        double yValue1 = seria[0]->at(i).y();
+        //double yValue2 = seria[1]->at(i).y();
+        minY = std::min({minY, yValue1});
+        maxY = std::max({maxY, yValue1});
+    }
+    if (generator.getRodzaj() == RodzajSygnalu::Skok) {
+        //minY = 0;
+    }
+    else if (generator.getRodzaj() == RodzajSygnalu::Sinusoida || generator.getRodzaj() == RodzajSygnalu::Prostokatny) {
+        double amplituda = generator.getAmplituda();
+        minY = -amplituda;
+        maxY = amplituda;
+    }
+    double margin = (maxY - minY) * 0.1;
+    osY[0]->setRange(minY - margin, maxY + margin);
+
+}
 
 
 

@@ -21,7 +21,7 @@ public:
     void inicjalizacjaWykresuPID(QVBoxLayout *layout);
     void inicjalizacjaWykresuWartosciSterowania(QVBoxLayout *layout);
     void WykresWartosciZadanej();
-    void WykresWartosciZadanej(int val);
+    void WykresWartosciZadanej_no_base();
     void WykresUchybu();
     void WykresPID();
     void WykresWartosciSterowania();
