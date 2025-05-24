@@ -78,6 +78,7 @@ void MainWindow::dane_i_wykresy()
                 wykres->getSymulator()->setFlag(false);
             }
             //przyklad
+
             QByteArray dane_siec;
             QDataStream out(&dane_siec, QIODevice::WriteOnly);
             out<<(double)usluga->getSymulator()->getLastRegulatorValue();
@@ -87,6 +88,7 @@ void MainWindow::dane_i_wykresy()
             TCPpolaczenie->write(dane_siec);
             TCPpolaczenie->flush();
             packet_number++;
+            wykres->WykresWartosciZadanej();
             ui->label_color->setStyleSheet("QLabel{background-color : red;}");
 
         }
@@ -95,6 +97,7 @@ void MainWindow::dane_i_wykresy()
 
             wykres->getSymulator()->symuluj_w_tle(wykres->getCzas());
             //double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
+
             QByteArray dane_siec;
             QDataStream out(&dane_siec, QIODevice::WriteOnly);
             out<<(double)wykres->getSymulator()->symuluj_wyjscie();
@@ -104,6 +107,7 @@ void MainWindow::dane_i_wykresy()
             TCPpolaczenie->write(dane_siec);
             TCPpolaczenie->flush();
             packet_number++;
+            wykres->WykresWartosciZadanej();
         }
         wykres->WykresUchybu();
         wykres->WykresPID();
@@ -140,7 +144,7 @@ void MainWindow::dane_i_wykresy()
             TCPpolaczenie->flush();
         }
     }
-    qDebug()<<packet_number<<" "<<wykres->getCzas();
+    qDebug()<<packet_number<<" "<<wykres->getCzas()<< " "<< korekta;
     //sinus po sieci nie dziala jak powinien
 }
 
@@ -181,33 +185,50 @@ void MainWindow::odczyt()
         dane_siec = TCPpolaczenie->readAll();
         QDataStream in(&dane_siec, QIODevice::ReadOnly);
         in>>val>>time>>interwal>>run_str;
-        interwalCzasowy=interwal;
-        simulationTimer->setInterval(interwalCzasowy);
-        wykres->getSymulator()->setLastRegulatorValue(val);
-        double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
+        if(time == packet_number)
+        {
+            wykres->getSymulator()->setLastRegulatorValue(val);
+            blokada = false;
+        }
+        /*double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
         wykres->WykresWartosciZadanej_no_base();
         wykres->krok();
         wykres->AktualizujWykresy();
-        simulationTimer->setInterval(interwalCzasowy);
+        */
+        if(interwal != interwalCzasowy )
+        {
+            interwalCzasowy=interwal;
+            korekta = 1;
+        }
+        /*if(korekta > interwalCzasowy*0.5) korekta = interwalCzasowy*0.5;
+        if(korekta < interwalCzasowy*(-0.5)) korekta = interwalCzasowy*(-0.5);
+        ;*/
+        if(korekta < 0.5) korekta = 0.5;
+        double war =  interwalCzasowy*korekta;
+        simulationTimer->setInterval(war);
         if(time < packet_number)
         {
-             blokada = true;;
+             blokada = true;
+            korekta = korekta - 0.02;
         }
         if(time >= packet_number)
         {
              blokada = false;
+            korekta = korekta + 0.01;
         }
         if(run_str){
             if(!simulationTimer->isActive()) simulationTimer->start();
-
+            /*
             QByteArray dane_siec_wyj;
             QDataStream out(&dane_siec_wyj, QIODevice::WriteOnly);
             out<<(double)wyjscie;
             out<<(int)packet_number;
+            out<<(int)interwalCzasowy;
+            out<<(bool)run_str;
             TCPpolaczenie->write(dane_siec_wyj);
             TCPpolaczenie->flush();
             packet_number++;
-
+            */
         }
         if(!run_str){
             simulationTimer->stop();
@@ -249,23 +270,30 @@ void MainWindow::odczyt_klient()
         in >> val_wyj>>time>>inter>>run_str;
         end_m = std::chrono::high_resolution_clock::now();
         //qDebug()<<wykres->getCzas()<<" "<<time;
+        if(packet_number == time)
+        {
         wykres->getSymulator()->setWyjscieObiektu(val_wyj);
         wykres->getSymulator()->setLastObjectOutput(val_wyj);
+         blokada = false;
+        }
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_m - start_m);
         wykres->getSymulator()->setFlag(true);
         ui->label_color->setStyleSheet("QLabel{background-color : green;}");
-        wykres->WykresWartosciZadanej();
+       /* wykres->WykresWartosciZadanej();
         //wykres->krok();
         wykres->AktualizujWykresy();
+        */
 
         ui->ms_label->setText(QString::number(duration.count())+" ms");
-        if(packet_number > time)
+        if( time < packet_number)
         {
             blokada = true;
+
         }
-        if(packet_number <= time)
+        if(time >= packet_number)
         {
             blokada = false;
+
         }
 
     }

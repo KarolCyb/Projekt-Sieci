@@ -94,6 +94,7 @@ private:
     std::chrono::time_point<std::chrono::high_resolution_clock> start_m;
     std::chrono::time_point<std::chrono::high_resolution_clock> end_m;
     int packet_number = 0;
+    float korekta = 1;
     bool wyslij_interwal = true;
     bool blokada = false;
     bool tryb_stac = true;
