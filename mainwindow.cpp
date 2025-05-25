@@ -1004,6 +1004,7 @@ void MainWindow::errorPolaczenie(){
     }
     if(!simulationTimer->isActive()) simulationTimer->start(interwalCzasowy);
     blokada = false;
+    this->simulationTimer->setInterval(ui->Interwal->text().toInt())
     //QMessageBox::information(this, "Informacja", "Nastąpiło nagłe utracenie połaczenia");
 }
 
