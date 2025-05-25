@@ -73,6 +73,8 @@ private slots:
 
     void errorPolaczenie();
 
+    void on_chkObustronneTaktowanie_checkStateChanged(const Qt::CheckState &arg1);
+
 private:
     Ui::MainWindow *ui;
     QTimer *simulationTimer;

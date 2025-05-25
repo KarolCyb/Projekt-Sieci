@@ -845,6 +845,7 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
     if(ui->letIP->isVisible()) ui->letIP->setVisible(0);
     else ui->letIP->setVisible(1);
 
+
     //if(ui->chkObustronneTaktowanie->isVisible()) ui->chkObustronneTaktowanie->setVisible(0);
     //else ui->chkObustronneTaktowanie->setVisible(1);
 
@@ -1004,5 +1005,12 @@ void MainWindow::errorPolaczenie(){
     if(!simulationTimer->isActive()) simulationTimer->start(interwalCzasowy);
     blokada = false;
     //QMessageBox::information(this, "Informacja", "Nastąpiło nagłe utracenie połaczenia");
+}
+
+
+void MainWindow::on_chkObustronneTaktowanie_checkStateChanged(const Qt::CheckState &arg1)
+{
+    if(ui->Reset->isEnabled()) ui->Reset->setEnabled(0);
+    else ui->Reset->setEnabled(1);
 }
 
