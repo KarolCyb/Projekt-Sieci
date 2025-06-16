@@ -190,8 +190,8 @@ void Wykresy::WykresWartosciZadanej_no_base() {
     for (int i = 0; i < seria[0]->count(); ++i) {
         double yValue1 = seria[0]->at(i).y();
         //double yValue2 = seria[1]->at(i).y();
-        minY = std::min({minY, yValue1});
-        maxY = std::max({maxY, yValue1});
+        minY = yValue1 + minY;
+        maxY = yValue1 + maxY;
     }
     if (generator.getRodzaj() == RodzajSygnalu::Skok) {
         //minY = 0;
@@ -203,7 +203,6 @@ void Wykresy::WykresWartosciZadanej_no_base() {
     }
     double margin = (maxY - minY) * 0.1;
     osY[0]->setRange(minY - margin, maxY + margin);
-
 }
 
 

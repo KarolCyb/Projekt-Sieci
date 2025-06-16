@@ -810,6 +810,24 @@
             </item>
             <item>
              <widget class="QComboBox" name="cbxZmianaTrybu">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>300</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>500</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <item>
                <property name="text">
                 <string>Tryb Stacjonarny</string>
@@ -973,22 +991,6 @@
            </layout>
           </item>
           <item>
-           <spacer name="horizontalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Policy::Minimum</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>180</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1150,16 +1152,13 @@
              </layout>
             </item>
             <item>
-             <spacer name="horizontalSpacer_2">
+             <spacer name="horizontalSpacer_7">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
               </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Policy::Minimum</enum>
-              </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>20</width>
+                <width>40</width>
                 <height>20</height>
                </size>
               </property>
