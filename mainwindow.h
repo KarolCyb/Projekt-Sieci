@@ -86,6 +86,13 @@ private:
     void UstawienieLayout();
     QVBoxLayout *layout[4];
     void obslugaZapisu();
+
+    void zapiszPakietRegulator(QByteArray &dane);
+    void zapiszPakietArx(QByteArray &dane);
+    void wczytajPakietOneClockArx(QByteArray &dane);
+    void wczytajPakietOneClockRegulator(QByteArray &dane);
+    void wczytajPakietTwoClockRegulator(QByteArray &dane);
+    void wczytajPakietTwoClockArx(QByteArray &dane);
     QPushButton *Wczytaj;
     Regulator* reg;
     Generator* gen;
@@ -101,5 +108,6 @@ private:
     bool blokada = false;
     bool tryb_stac = true;
     bool run_str = true;
+    int error = -1;
 };
 #endif // MAINWINDOW_H
