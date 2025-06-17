@@ -32,6 +32,8 @@ double symulator::symuluj_bez_wyjscia(double czas)
 double symulator::symuluj_wyjscie()
 {
     wyjscieObiektu = obiekt.obliczWyjscie(this->getLastRegulatorValue());
+    if(wyjscieObiektu > 1000000000000000) wyjscieObiektu = 1000000000000000;
+    if(wyjscieObiektu < -1000000000000000) wyjscieObiektu = -1000000000000000;
     setLastObjectOutput(wyjscieObiektu);
     return wyjscieObiektu;
 }

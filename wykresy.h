@@ -35,6 +35,7 @@ public:
     void wyczyscLayout(QLayout* layout);
     void ResetCzas(){czas=0;}
     void ResetujWykresy();
+    void widzialnoscWykresow(bool lol);
 private:
     QLineSeries *seria[7] = {nullptr};
     QChart *wykres[4]= {nullptr};

@@ -133,6 +133,13 @@ void Wykresy::inicjalizacjaWykresuWartosciSterowania(QVBoxLayout *layout){
     osX[3]->setTitleText("Czas [mS]");
     osY[3]->setTitleText("Wartość Ster");
 }
+void Wykresy::widzialnoscWykresow(bool lol){
+    seria[1]->setVisible(lol);
+    seria[2]->setVisible(lol);
+    seria[3]->setVisible(lol);
+    seria[4]->setVisible(lol);
+    seria[5]->setVisible(lol);
+}
 void Wykresy::WykresWartosciZadanej() {
     seria[0]->append(czas, s->getWyjscieObiektu());
     seria[1]->append(czas, s->getWartoscZadana());
@@ -173,12 +180,12 @@ void Wykresy::WykresWartosciZadanej() {
 }
 void Wykresy::WykresWartosciZadanej_no_base() {
     seria[0]->append(czas, s->getWyjscieObiektu());
-    //seria[1]->append(czas, s->getLastRegulatorValue());
-
+    seria[1]->append(czas, s->getWartoscZadana());
+    seria[1]->setVisible(false);
     const int maxPoints = 1000;
     if (seria[0]->count() > maxPoints) {
         seria[0]->remove(0);
-        //seria[1]->remove(0);
+        seria[1]->remove(0);
     }
 
     if (czas > maxPoints) {
@@ -274,7 +281,7 @@ void Wykresy::WykresPID() {
     }
 }
 void Wykresy::WykresWartosciSterowania(){
-    double Sterujaca = s->getRegulator().getWartoscSterujaca();
+    double Sterujaca = s->getLastRegulatorValue();
     seria[6]->append(czas, Sterujaca);
 
     const int maxPoints = 400;

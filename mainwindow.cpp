@@ -46,23 +46,14 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
 }
 void MainWindow::zapiszPakietRegulator(QByteArray &dane){
     QDataStream out(&dane, QIODevice::WriteOnly);
-    if(error < 0)
-    {
+
+
     out<<(int)error;
     out<<(double)usluga->getSymulator()->getLastRegulatorValue();
     out<<(int)packet_number;
     out<<(int)interwalCzasowy;
     out<<(bool)run_str;
-    }
-    else
-    {
-        out<<(int)-1;
-        if((packet_number - error) > 0)out<<(double)buferOneClock[packet_number - error];
-        out<<(int)error;
-        out<<(int)interwalCzasowy;
-        out<<(bool)run_str;
-        this->error = -1;
-    }
+
 }
 void MainWindow::zapiszPakietArx(QByteArray &dane){
     QDataStream out(&dane, QIODevice::WriteOnly);
@@ -73,18 +64,15 @@ void MainWindow::zapiszPakietArx(QByteArray &dane){
     out<<(bool)run_str;
 }
 void MainWindow::wczytajPakietOneClockRegulator(QByteArray &dane){
-    int error;
+    int error_n;
     double val_wyj;
     int time;
     int interwal;
     bool run_str;
     dane = TCPpolaczenie->readAll();
     QDataStream in(&dane, QIODevice::ReadOnly);
-    in>>error>>val_wyj>>time>>interwal>>run_str;
-    if(error > 0)
-    {
-        this->error = error;
-    }
+    in>>error_n>>val_wyj>>time>>interwal>>run_str;
+    if(error_n > 0) packet_number = error_n;
     end_m = std::chrono::high_resolution_clock::now();
     wykres->getSymulator()->setWyjscieObiektu(val_wyj);
     wykres->getSymulator()->setLastObjectOutput(val_wyj);
@@ -99,24 +87,23 @@ void MainWindow::wczytajPakietOneClockRegulator(QByteArray &dane){
 }
 void MainWindow::wczytajPakietOneClockArx(QByteArray &dane){
 
-    int error;
+    int error_n;
     double val;
     int time;
     int interwal;
     bool run_str;
     dane = TCPpolaczenie->readAll();
     QDataStream in(&dane, QIODevice::ReadOnly);
-    in>>error>>val>>time>>interwal>>run_str;
-    if(packet_number != time)
-    {
-        error = packet_number;
-    }
-    else
-    {
+    in>>error_n>>val>>time>>interwal>>run_str;
+    if(packet_number == time){
     wykres->getSymulator()->setLastRegulatorValue(val);
     double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
-    }
+    }else this->error = packet_number;
+    wykres->widzialnoscWykresow(false);
     wykres->WykresWartosciZadanej_no_base();
+    wykres->WykresWartosciSterowania();
+    wykres->WykresUchybu();
+    wykres->WykresPID();
     wykres->krok();
     wykres->AktualizujWykresy();
    // qDebug()<<packet_number<<" "<<time;
@@ -233,6 +220,7 @@ void MainWindow::dane_i_wykresy()
 */
     if(TCPpolaczenie == nullptr)
     {
+        wykres->widzialnoscWykresow(true);
         wykres->getSymulator()->symulujKrok(wykres->getCzas());
         //wykres->WykresWartosciZadanej();
     }
@@ -269,7 +257,6 @@ void MainWindow::odczyt()
         TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
         if(error < 0) packet_number++;
-        this->error= -1;
     }
     /*
     if(!ui->chkObustronneTaktowanie->isChecked())
@@ -993,6 +980,7 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
         ui->StalaD->setEnabled(0);
         ui->Start->setEnabled(0);
         ui->Stop->setEnabled(0);
+        ui->Reset->setEnabled(0);
     }
     if(!ui->chkServer->isChecked())
     {
@@ -1009,6 +997,8 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
         ui->StalaD->setEnabled(1);
         ui->Start->setEnabled(1);
         ui->Stop->setEnabled(1);
+        ui->Reset->setEnabled(1);
+
     }
 }
 
@@ -1121,12 +1111,14 @@ void MainWindow::errorPolaczenie(){
     ui->UstawieniaObiektuARX->setEnabled(1);
     ui->Zapisz->setEnabled(1);
     ui->Wczytaj->setEnabled(1);
-
+    ui->Start->setEnabled(1);
+    ui->Stop->setEnabled(1);
+    ui->Reset->setEnabled(1);
     ui->cbxZmianaTrybu->setCurrentIndex(0);
 
     ui->ms_label->setVisible(0);
     emit ui->cbxZmianaTrybu->activated(0);
-
+    packet_number = 0;
     ui->btnSendSignal->setEnabled(1);
     ui->btnRozlacz->setEnabled(0);
     if(TCPpolaczenie != nullptr) TCPpolaczenie = nullptr;
