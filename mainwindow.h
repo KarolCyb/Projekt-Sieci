@@ -107,7 +107,7 @@ private:
     bool wyslij_interwal = true;
     bool blokada = false;
     bool tryb_stac = true;
-    bool run_str = true;
+    char run_str = 'r';
     int error = -1;
     std::deque<double> buferOneClock;
     std::deque<double> buferTwoClockRegulator;

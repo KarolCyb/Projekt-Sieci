@@ -52,7 +52,7 @@ void MainWindow::zapiszPakietRegulator(QByteArray &dane){
     out<<(double)usluga->getSymulator()->getLastRegulatorValue();
     out<<(int)packet_number;
     out<<(int)interwalCzasowy;
-    out<<(bool)run_str;
+    out<<(char)run_str;
 
 }
 void MainWindow::zapiszPakietArx(QByteArray &dane){
@@ -61,14 +61,14 @@ void MainWindow::zapiszPakietArx(QByteArray &dane){
     out<<(double)wykres->getSymulator()->getLastObjectOutput();
     out<<(int)packet_number;
     out<<(int)interwalCzasowy;
-    out<<(bool)run_str;
+    out<<(char)run_str;
 }
 void MainWindow::wczytajPakietOneClockRegulator(QByteArray &dane){
     double val_zad;
     double val_wyj;
     int time;
     int interwal;
-    bool run_str_n;
+    char run_str_n;
     dane = TCPpolaczenie->readAll();
     QDataStream in(&dane, QIODevice::ReadOnly);
     in>>val_zad>>val_wyj>>time>>interwal>>run_str_n;
@@ -90,7 +90,7 @@ void MainWindow::wczytajPakietOneClockArx(QByteArray &dane){
     double val;
     int time;
     int interwal;
-    bool run_str_n;
+    char run_str_n;
     dane = TCPpolaczenie->readAll();
     QDataStream in(&dane, QIODevice::ReadOnly);
     in>>val_zad>>val>>time>>interwal>>run_str_n;
@@ -111,10 +111,10 @@ void MainWindow::wczytajPakietTwoClockRegulator(QByteArray &dane){
     double val_wyj;
     int time;
     int interwal;
-    bool run_str;
+    char run_str_n;
     dane = TCPpolaczenie->readAll();
     QDataStream in(&dane, QIODevice::ReadOnly);
-    in>>val_zad>>val_wyj>>time>>interwal>>run_str;
+    in>>val_zad>>val_wyj>>time>>interwal>>run_str_n;
 
     end_m = std::chrono::high_resolution_clock::now();
 
@@ -130,18 +130,19 @@ void MainWindow::wczytajPakietTwoClockObiekt(QByteArray &dane){
     double val;
     int time;
     int interwal;
-    bool run_str_n;
+    char run_str_n;
     dane = TCPpolaczenie->readAll();
     QDataStream in(&dane, QIODevice::ReadOnly);
     in>>val_zad>>val>>time>>interwal>>run_str_n;
     simulationTimer->setInterval(interwal);
     if(packet_number < time-1) simulationTimer->setInterval(interwal*0.5);
     if(packet_number > time-1) simulationTimer->setInterval(interwal*1.5);
-    if(run_str_n && !simulationTimer->isActive()) simulationTimer->start();
-    if(!run_str_n && simulationTimer->isActive()) simulationTimer->stop();
+    if(run_str_n =='g' && !simulationTimer->isActive()) simulationTimer->start();
+    if(run_str_n =='s' && simulationTimer->isActive()) simulationTimer->stop();
     wykres->getSymulator()->setLastRegulatorValue(val);
     wykres->getSymulator()->setLastGeneratorValue(val_zad);
     buferTwoClockObiekt.push_front(val);
+    if(run_str_n =='r') on_Reset_clicked();
     qDebug()<<"wła: "<<packet_number<<" otrz: "<<time;
 }
 void MainWindow::dane_i_wykresy()
@@ -516,21 +517,17 @@ MainWindow::~MainWindow()
 void MainWindow::on_Start_clicked()
 {
     usluga->SprawdzenieWszystkichDanych(interwalCzasowy);
-    run_str = true;
+    run_str = 'g';
 }
 
 void MainWindow::on_Stop_clicked()
 {
-    run_str = false;
+    run_str = 's';
     simulationTimer->stop();
     if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked() && ui->chkObustronneTaktowanie->isChecked())
     {
         QByteArray dane_siec;
-        QDataStream out(&dane_siec, QIODevice::WriteOnly);
-        out<<(double)usluga->getSymulator()->getLastRegulatorValue();
-        out<<(int)packet_number;
-        out<<(int)interwalCzasowy;
-        out<<(bool)run_str;
+        zapiszPakietRegulator(dane_siec);
         TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
     }
@@ -557,8 +554,18 @@ void MainWindow::bladUstawien()
 }
 
 void MainWindow::on_Reset_clicked() {
-    disconnect(simulationTimer, nullptr, nullptr, nullptr);
+   // disconnect(simulationTimer, nullptr, nullptr, nullptr);
     simulationTimer->stop();
+
+    if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked() && ui->chkObustronneTaktowanie->isChecked())
+   {
+        run_str = 'r';
+        QByteArray dane_siec;
+        zapiszPakietRegulator(dane_siec);
+       TCPpolaczenie->write(dane_siec);
+       TCPpolaczenie->flush();
+    }
+    run_str = 's';
     wykres->ResetujWykresy();
     wykres->ResetCzas();
     usluga->ResetSymulacji();
