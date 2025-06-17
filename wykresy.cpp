@@ -134,7 +134,7 @@ void Wykresy::inicjalizacjaWykresuWartosciSterowania(QVBoxLayout *layout){
     osY[3]->setTitleText("Wartość Ster");
 }
 void Wykresy::widzialnoscWykresow(bool lol){
-    seria[1]->setVisible(lol);
+    //seria[1]->setVisible(lol);
     seria[2]->setVisible(lol);
     seria[3]->setVisible(lol);
     seria[4]->setVisible(lol);
@@ -181,7 +181,7 @@ void Wykresy::WykresWartosciZadanej() {
 void Wykresy::WykresWartosciZadanej_no_base() {
     seria[0]->append(czas, s->getWyjscieObiektu());
     seria[1]->append(czas, s->getWartoscZadana());
-    seria[1]->setVisible(false);
+
     const int maxPoints = 1000;
     if (seria[0]->count() > maxPoints) {
         seria[0]->remove(0);
