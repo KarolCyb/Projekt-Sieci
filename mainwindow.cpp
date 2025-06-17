@@ -133,10 +133,14 @@ void MainWindow::wczytajPakietTwoClockObiekt(QByteArray &dane){
     QDataStream in(&dane, QIODevice::ReadOnly);
     in>>val_zad>>val>>time>>interwal>>run_str_n;
     simulationTimer->setInterval(interwal);
+    if(packet_number < time-1) simulationTimer->setInterval(interwal*0.5);
+    if(packet_number > time-1) simulationTimer->setInterval(interwal*1.5);
     if(run_str_n && !simulationTimer->isActive()) simulationTimer->start();
     if(!run_str_n && simulationTimer->isActive()) simulationTimer->stop();
     wykres->getSymulator()->setLastRegulatorValue(val);
     wykres->getSymulator()->setLastGeneratorValue(val_zad);
+    buferTwoClockObiekt.push_front(val);
+    qDebug()<<"wła: "<<packet_number<<" otrz: "<<time;
 }
 void MainWindow::dane_i_wykresy()
 {
@@ -258,11 +262,12 @@ void MainWindow::dane_i_wykresy()
             wykres->getSymulator()->setFlag(false);
         }
         wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
+                packet_number++;
         QByteArray dane_siec;
         zapiszPakietRegulator(dane_siec);
         TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
-        packet_number++;
+
         buferOneClock.push_front(usluga->getSymulator()->getLastRegulatorValue());
         buferOneClock.pop_back();
         ui->label_color->setStyleSheet("QLabel{background-color : red;}");
@@ -278,27 +283,35 @@ void MainWindow::dane_i_wykresy()
             wykres->getSymulator()->setFlag(false);
         }
         wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
-         wykres->widzialnoscWykresow(true);
+        packet_number++;
+        wykres->widzialnoscWykresow(true);
         start_m = std::chrono::high_resolution_clock::now();
         QByteArray dane_siec;
         zapiszPakietRegulator(dane_siec);
         TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
-        packet_number++;
+
         ui->label_color->setStyleSheet("QLabel{background-color : red;}");
         wykres->WykresWartosciZadanej();
     }
     //obiekt
     if(TCPpolaczenie != nullptr && ui->chkServer->isChecked() && ui->chkObustronneTaktowanie->isChecked())
     {
+        if(!buferTwoClockObiekt.empty())
+        {
+            double val = buferTwoClockObiekt.back();
+            wykres->getSymulator()->setLastRegulatorValue(val);
+            buferTwoClockObiekt.pop_back();
+        }
         double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
         wykres->getSymulator()->symuluj_w_tle(wykres->getCzas());
+        packet_number++;
         wykres->widzialnoscWykresow(false);
         QByteArray dane_siec;
         zapiszPakietArx(dane_siec);
         TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
-        packet_number++;
+
         wykres->WykresWartosciZadanej_no_base();
     }
 
