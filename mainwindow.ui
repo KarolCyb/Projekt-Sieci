@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1845</width>
-    <height>942</height>
+    <height>1039</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -810,6 +810,18 @@
             </item>
             <item>
              <widget class="QComboBox" name="cbxZmianaTrybu">
+              <property name="minimumSize">
+               <size>
+                <width>300</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <item>
                <property name="text">
                 <string>Tryb Stacjonarny</string>
@@ -824,6 +836,12 @@
             </item>
             <item>
              <widget class="QLabel" name="lblPolaczenie">
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
@@ -860,6 +878,12 @@
              <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="2,1">
               <item>
                <widget class="QLineEdit" name="letIP">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>127.0.0.1</string>
                 </property>
@@ -867,6 +891,12 @@
               </item>
               <item>
                <widget class="QSpinBox" name="sbxPort">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="maximum">
                  <number>65534</number>
                 </property>
@@ -881,6 +911,12 @@
              <layout class="QHBoxLayout" name="horizontalLayout_14">
               <item>
                <widget class="QCheckBox" name="chkObustronneTaktowanie">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>Taktowanie Obustronne</string>
                 </property>
@@ -888,6 +924,12 @@
               </item>
               <item>
                <widget class="QCheckBox" name="chkServer">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>Server</string>
                 </property>
@@ -897,6 +939,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="btnSendSignal">
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
@@ -910,6 +958,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="btnRozlacz">
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="text">
                <string>Rozłacz</string>
               </property>
@@ -1350,7 +1404,7 @@
      <x>0</x>
      <y>0</y>
      <width>1845</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
