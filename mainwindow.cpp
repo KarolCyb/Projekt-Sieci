@@ -991,6 +991,8 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
         ui->Wzmocnienie->setEnabled(0);
         ui->StalaI->setEnabled(0);
         ui->StalaD->setEnabled(0);
+        ui->Start->setEnabled(0);
+        ui->Stop->setEnabled(0);
     }
     if(!ui->chkServer->isChecked())
     {
@@ -1005,6 +1007,8 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
         ui->Wzmocnienie->setEnabled(1);
         ui->StalaI->setEnabled(1);
         ui->StalaD->setEnabled(1);
+        ui->Start->setEnabled(1);
+        ui->Stop->setEnabled(1);
     }
 }
 

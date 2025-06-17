@@ -157,6 +157,7 @@ void Wykresy::WykresWartosciZadanej() {
         minY = std::min({minY, yValue1, yValue2});
         maxY = std::max({maxY, yValue1, yValue2});
     }
+    /*
     if (generator.getRodzaj() == RodzajSygnalu::Skok) {
         //minY = 0;
     }
@@ -165,13 +166,14 @@ void Wykresy::WykresWartosciZadanej() {
         minY = -amplituda;
         maxY = amplituda;
     }
+*/
     double margin = (maxY - minY) * 0.1;
     osY[0]->setRange(minY - margin, maxY + margin);
 
 }
 void Wykresy::WykresWartosciZadanej_no_base() {
     seria[0]->append(czas, s->getWyjscieObiektu());
-    //seria[1]->append(czas, s->getWartoscZadana());
+    //seria[1]->append(czas, s->getLastRegulatorValue());
 
     const int maxPoints = 1000;
     if (seria[0]->count() > maxPoints) {
@@ -193,6 +195,7 @@ void Wykresy::WykresWartosciZadanej_no_base() {
         minY = std::min({minY, yValue1});
         maxY = std::max({maxY, yValue1});
     }
+    /*
     if (generator.getRodzaj() == RodzajSygnalu::Skok) {
         //minY = 0;
     }
@@ -200,7 +203,7 @@ void Wykresy::WykresWartosciZadanej_no_base() {
         double amplituda = generator.getAmplituda();
         minY = -amplituda;
         maxY = amplituda;
-    }
+    }*/
     double margin = (maxY - minY) * 0.1;
     osY[0]->setRange(minY - margin, maxY + margin);
 
