@@ -41,16 +41,28 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     connect(simulationTimer, &QTimer::timeout, this, [=]() {
         wykres->WykresWartosciSterowania();
     });*/
+    buferOneClock.resize(100);
     connect(simulationTimer, &QTimer::timeout, this, &MainWindow::dane_i_wykresy);
-
 }
 void MainWindow::zapiszPakietRegulator(QByteArray &dane){
     QDataStream out(&dane, QIODevice::WriteOnly);
+    if(error < 0)
+    {
     out<<(int)error;
     out<<(double)usluga->getSymulator()->getLastRegulatorValue();
     out<<(int)packet_number;
     out<<(int)interwalCzasowy;
     out<<(bool)run_str;
+    }
+    else
+    {
+        out<<(int)-1;
+        if((packet_number - error) > 0)out<<(double)buferOneClock[packet_number - error];
+        out<<(int)error;
+        out<<(int)interwalCzasowy;
+        out<<(bool)run_str;
+        this->error = -1;
+    }
 }
 void MainWindow::zapiszPakietArx(QByteArray &dane){
     QDataStream out(&dane, QIODevice::WriteOnly);
@@ -69,6 +81,10 @@ void MainWindow::wczytajPakietOneClockRegulator(QByteArray &dane){
     dane = TCPpolaczenie->readAll();
     QDataStream in(&dane, QIODevice::ReadOnly);
     in>>error>>val_wyj>>time>>interwal>>run_str;
+    if(error > 0)
+    {
+        this->error = error;
+    }
     end_m = std::chrono::high_resolution_clock::now();
     wykres->getSymulator()->setWyjscieObiektu(val_wyj);
     wykres->getSymulator()->setLastObjectOutput(val_wyj);
@@ -91,11 +107,19 @@ void MainWindow::wczytajPakietOneClockArx(QByteArray &dane){
     dane = TCPpolaczenie->readAll();
     QDataStream in(&dane, QIODevice::ReadOnly);
     in>>error>>val>>time>>interwal>>run_str;
+    if(packet_number != time)
+    {
+        error = packet_number;
+    }
+    else
+    {
     wykres->getSymulator()->setLastRegulatorValue(val);
     double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
+    }
     wykres->WykresWartosciZadanej_no_base();
     wykres->krok();
     wykres->AktualizujWykresy();
+   // qDebug()<<packet_number<<" "<<time;
 }
 void MainWindow::wczytajPakietTwoClockRegulator(QByteArray &dane){
 
@@ -221,6 +245,9 @@ void MainWindow::dane_i_wykresy()
         TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
         packet_number++;
+        buferOneClock.push_front(usluga->getSymulator()->getLastRegulatorValue());
+        buferOneClock.pop_back();
+
     }
     wykres->WykresWartosciZadanej();
     wykres->WykresUchybu();
@@ -228,6 +255,7 @@ void MainWindow::dane_i_wykresy()
     wykres->WykresWartosciSterowania();
     wykres->krok();
     wykres->AktualizujWykresy();
+    //qDebug()<<buferOneClock.front();
 }
 
 void MainWindow::odczyt()
@@ -240,7 +268,8 @@ void MainWindow::odczyt()
         zapiszPakietArx(dane_siec);
         TCPpolaczenie->write(dane_siec);
         TCPpolaczenie->flush();
-        packet_number++;
+        if(error < 0) packet_number++;
+        this->error= -1;
     }
     /*
     if(!ui->chkObustronneTaktowanie->isChecked())

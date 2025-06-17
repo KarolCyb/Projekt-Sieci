@@ -109,5 +109,6 @@ private:
     bool tryb_stac = true;
     bool run_str = true;
     int error = -1;
+    std::deque<double> buferOneClock;
 };
 #endif // MAINWINDOW_H
