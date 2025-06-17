@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1845</width>
+    <width>1849</width>
     <height>1039</height>
    </rect>
   </property>
@@ -788,7 +788,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_11" stretch="5,0,1,5,0,5,0,0">
+           <layout class="QVBoxLayout" name="verticalLayout_11" stretch="5,0,1,0,5,0,5,0,0">
             <property name="spacing">
              <number>6</number>
             </property>
@@ -873,6 +873,36 @@
                <number>-1</number>
               </property>
              </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="2,1">
+              <item>
+               <widget class="QLabel" name="lblAdresIp">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Adres Ip:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblPort">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Port:</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="2,1">
@@ -1403,7 +1433,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1845</width>
+     <width>1849</width>
      <height>25</height>
     </rect>
    </property>

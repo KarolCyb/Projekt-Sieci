@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
     ui->letIP->setVisible(0);
     ui->sbxPort->setVisible(0);
     ui->chkObustronneTaktowanie->setVisible(0);
+    ui->lblPort->setVisible(0);
+    ui->lblAdresIp->setVisible(0);
     /*connect(simulationTimer, &QTimer::timeout, this, [=]() {
         wykres->WykresWartosciZadanej();
     });
@@ -1054,6 +1056,8 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
         ui->Start->setEnabled(0);
         ui->Stop->setEnabled(0);
         ui->Reset->setEnabled(0);
+
+        ui->lblAdresIp->setVisible(0);
     }
     if(!ui->chkServer->isChecked())
     {
@@ -1071,6 +1075,8 @@ void MainWindow::on_chkServer_stateChanged(int arg1)
         ui->Start->setEnabled(1);
         ui->Stop->setEnabled(1);
         ui->Reset->setEnabled(1);
+        ui->lblPort->setVisible(1);
+        ui->lblAdresIp->setVisible(1);
 
     }
 }
@@ -1087,6 +1093,8 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
         ui->letIP->setVisible(0);
         ui->sbxPort->setVisible(0);
         ui->chkObustronneTaktowanie->setVisible(0);
+        ui->lblPort->setVisible(0);
+        ui->lblAdresIp->setVisible(0);
 
         ui->Sposob->setEnabled(1);
         ui->Interwal->setEnabled(1);
@@ -1111,6 +1119,8 @@ void MainWindow::on_cbxZmianaTrybu_activated(int index)
         ui->chkServer->setVisible(1);
         ui->letIP->setVisible(1);
         ui->sbxPort->setVisible(1);
+        ui->lblPort->setVisible(1);
+        ui->lblAdresIp->setVisible(1);
         if(ui->chkServer->isChecked()){
             ui->chkServer->setChecked(false);
             if(ui->letIP->isVisible()) ui->letIP->setVisible(0);
