@@ -104,6 +104,7 @@ void MainWindow::wczytajPakietOneClockArx(QByteArray &dane){
     wykres->WykresPID();
     wykres->krok();
     wykres->AktualizujWykresy();
+    if(run_str_n =='r') on_Reset_clicked();
    // qDebug()<<packet_number<<" "<<time;
 }
 void MainWindow::wczytajPakietTwoClockRegulator(QByteArray &dane){
@@ -557,14 +558,15 @@ void MainWindow::on_Reset_clicked() {
    // disconnect(simulationTimer, nullptr, nullptr, nullptr);
     simulationTimer->stop();
 
-    if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked() && ui->chkObustronneTaktowanie->isChecked())
-   {
+    if(TCPpolaczenie != nullptr)
+    {
         run_str = 'r';
         QByteArray dane_siec;
         zapiszPakietRegulator(dane_siec);
-       TCPpolaczenie->write(dane_siec);
-       TCPpolaczenie->flush();
+        TCPpolaczenie->write(dane_siec);
+        TCPpolaczenie->flush();
     }
+
     run_str = 's';
     wykres->ResetujWykresy();
     wykres->ResetCzas();
