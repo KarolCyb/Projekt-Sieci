@@ -180,7 +180,7 @@ void Wykresy::WykresWartosciZadanej() {
 }
 void Wykresy::WykresWartosciZadanej_no_base() {
     seria[0]->append(czas, s->getWyjscieObiektu());
-    seria[1]->append(czas, s->getWartoscZadana());
+    seria[1]->append(czas, s->getLastGeneratorValue());
 
     const int maxPoints = 1000;
     if (seria[0]->count() > maxPoints) {
@@ -198,9 +198,9 @@ void Wykresy::WykresWartosciZadanej_no_base() {
 
     for (int i = 0; i < seria[0]->count(); ++i) {
         double yValue1 = seria[0]->at(i).y();
-        //double yValue2 = seria[1]->at(i).y();
-        minY = std::min({minY, yValue1});
-        maxY = std::max({maxY, yValue1});
+        double yValue2 = seria[1]->at(i).y();
+        minY = std::min({minY, yValue1, yValue2});
+        maxY = std::max({maxY, yValue1, yValue2});
     }
     /*
     if (generator.getRodzaj() == RodzajSygnalu::Skok) {

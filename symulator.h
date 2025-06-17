@@ -14,6 +14,7 @@ class symulator
     double wyjscieObiektu = 0;
     double lastRegulatorValue = 0;
     double lastObjectOutput = 0 ;
+    double lastGeneratorValue = 0;
     bool flaga = true;
     bool flaga_synchro = true;
 public:
@@ -34,6 +35,8 @@ public:
     ObiektARX getObiektARX();
     void setLastRegulatorValue(double value) { lastRegulatorValue = value; }
     void setLastObjectOutput(double value) { lastObjectOutput = value; }
+    void setLastGeneratorValue(double value) { lastGeneratorValue = value; }
+    double getLastGeneratorValue()  { return lastGeneratorValue; }
     double getLastRegulatorValue()  { return lastRegulatorValue; }
     double getLastObjectOutput()  { return lastObjectOutput; }
     void setWyjscieObiektu(double wo){wyjscieObiektu=wo;};

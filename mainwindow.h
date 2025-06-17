@@ -92,7 +92,7 @@ private:
     void wczytajPakietOneClockArx(QByteArray &dane);
     void wczytajPakietOneClockRegulator(QByteArray &dane);
     void wczytajPakietTwoClockRegulator(QByteArray &dane);
-    void wczytajPakietTwoClockArx(QByteArray &dane);
+    void wczytajPakietTwoClockObiekt(QByteArray &dane);
     QPushButton *Wczytaj;
     Regulator* reg;
     Generator* gen;
@@ -110,5 +110,7 @@ private:
     bool run_str = true;
     int error = -1;
     std::deque<double> buferOneClock;
+    std::deque<double> buferTwoClockRegulator;
+    std::deque<double> buferTwoClockObiekt;
 };
 #endif // MAINWINDOW_H
