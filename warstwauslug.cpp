@@ -78,7 +78,7 @@ void WarstwaUslug::SprawdzenieWszystkichDanych(double i) {
     if (regulator.getStalaD() < 0 || regulator.getStalaI() < 0 || regulator.getWzmocnienie() < 0 ||
         (regulator.getStalaD() == 0 && regulator.getStalaI() == 0 && regulator.getWzmocnienie() == 0)||(regulator.getCalkowanieWsumie()!=true&&regulator.getCalkowanieWsumie()!=false)) {
         poprawnyRegulator = false;
-    }
+    }/*
     ObiektARX obiekt = s->getObiektARX();
     int liczbaZerA = 0;
     int liczbaZerB = 0;
@@ -91,7 +91,7 @@ void WarstwaUslug::SprawdzenieWszystkichDanych(double i) {
     if (liczbaZerA == 3 || liczbaZerB == 3 || obiekt.getOpoznienie() <= 0) {
         poprawnyObiekt = false;
     }
-
+    */
     if (!poprawnyGenerator || !poprawnyRegulator || !poprawnyObiekt || i <= 0) {
         emit BledneDane();
     } else {
