@@ -57,7 +57,7 @@ void WarstwaUslug::SprawdzenieWszystkichDanych(double i) {
     bool poprawnyGenerator = true;
     bool poprawnyRegulator = true;
     bool poprawnyObiekt = true;
-
+    /*
     Generator generator = s->getGenerator();
 
     if (generator.getRodzaj() == RodzajSygnalu::Skok && generator.getAmplituda() <= 0) {

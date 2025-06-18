@@ -307,6 +307,10 @@ void MainWindow::dane_i_wykresy()
             double val = buferTwoClockObiekt.back();
             wykres->getSymulator()->setLastRegulatorValue(val);
             buferTwoClockObiekt.pop_back();
+            while(buferTwoClockObiekt.size() > 2)
+            {
+                buferTwoClockObiekt.pop_back();
+            }
         }
         double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
         wykres->getSymulator()->symuluj_w_tle(wykres->getCzas());
@@ -575,6 +579,10 @@ void MainWindow::on_Reset_clicked() {
     wykres->ResetCzas();
     usluga->ResetSymulacji();
     wykres->InicjalizujWykresy(layout);
+    wykres->getSymulator()->setLastGeneratorValue(0);
+    wykres->getSymulator()->setLastRegulatorValue(0);
+    wykres->getSymulator()->setLastObjectOutput(0);
+    wykres->getSymulator()->getRegulator().resetuj();
 }
 
 void MainWindow::obslugaZapisu()

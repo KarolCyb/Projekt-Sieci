@@ -48,6 +48,7 @@ public:
     void setFlag(bool wart){flaga = wart;}
     bool getFlagSynchro(){return flaga_synchro;}
     void setFlagSynchro(bool wart){flaga_synchro = wart;}
+    void setWyjscie(double wal){wyjscieObiektu = 0;}
 };
 
 #endif // SYMULATOR_H
