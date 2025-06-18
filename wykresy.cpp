@@ -141,7 +141,7 @@ void Wykresy::widzialnoscWykresow(bool lol){
     seria[5]->setVisible(lol);
 }
 void Wykresy::WykresWartosciZadanej() {
-    seria[0]->append(czas, s->getWyjscieObiektu());
+    seria[0]->append(czas, s->getLastObjectOutput());
     seria[1]->append(czas, s->getWartoscZadana());
 
     const int maxPoints = 1000;
@@ -179,7 +179,7 @@ void Wykresy::WykresWartosciZadanej() {
 
 }
 void Wykresy::WykresWartosciZadanej_no_base() {
-    seria[0]->append(czas, s->getWyjscieObiektu());
+    seria[0]->append(czas, s->getLastObjectOutput());
     seria[1]->append(czas, s->getLastGeneratorValue());
 
     const int maxPoints = 1000;
