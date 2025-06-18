@@ -45,7 +45,10 @@ void WarstwaUslug::SprawdzenieObiektu(ObiektARX* o){
     }
     if(b != 3 && a != 3 && o->getOpoznienie() >= 0) {
 
-        s->setObiektARX(*o);
+        //s->setObiektARX(*o);
+        s->getObiektARX_fun().setWielomianA(o->getWielomianA());
+        s->getObiektARX_fun().setWielomianB(o->getWielomianB());
+        s->getObiektARX_fun().setOpoznienie(o->getOpoznienie());
 
     }else{
         emit blad();

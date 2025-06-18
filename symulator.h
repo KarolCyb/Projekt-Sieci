@@ -33,6 +33,7 @@ public:
     Generator &getGenerator();
     Regulator &getRegulator();
     ObiektARX getObiektARX();
+    ObiektARX &getObiektARX_fun(){return this->obiekt;};
     void setLastRegulatorValue(double value) { lastRegulatorValue = value; }
     void setLastObjectOutput(double value) { lastObjectOutput = value; }
     void setLastGeneratorValue(double value) { lastGeneratorValue = value; }
