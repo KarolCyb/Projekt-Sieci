@@ -46,6 +46,13 @@ double symulator::symuluj_w_tle(double czas)
     return sygnalSterowania;
 
 }
+double symulator::symuluj_w_tle_regulator(double czas)
+{
+    double sygnalSterowania = lastRegulatorValue;
+    wyjscieObiektu = obiekt.obliczWyjscie(sygnalSterowania);
+    return wyjscieObiektu;
+
+}
 double symulator::getWartoscZadana() { return regulator.getWartoscZadana(); }
 double symulator::getZaklocenie() { return obiekt.getZaklocenie(); }
 double symulator::getSterowanie() { return regulator.getWartoscSterujaca(); }

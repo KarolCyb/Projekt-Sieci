@@ -287,8 +287,9 @@ void MainWindow::dane_i_wykresy()
             wykres->getSymulator()->setFlag(false);
         }
         wykres->getSymulator()->symuluj_bez_wyjscia(wykres->getCzas());
+        wykres->getSymulator()->symuluj_w_tle_regulator(wykres->getCzas());
         packet_number++;
-        wykres->widzialnoscWykresow(true);
+        //wykres->widzialnoscWykresow(true);
         start_m = std::chrono::high_resolution_clock::now();
         QByteArray dane_siec;
         zapiszPakietRegulator(dane_siec);
@@ -310,7 +311,7 @@ void MainWindow::dane_i_wykresy()
         double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
         wykres->getSymulator()->symuluj_w_tle(wykres->getCzas());
         packet_number++;
-        wykres->widzialnoscWykresow(false);
+        //wykres->widzialnoscWykresow(false);
         QByteArray dane_siec;
         zapiszPakietArx(dane_siec);
         TCPpolaczenie->write(dane_siec);
@@ -320,8 +321,10 @@ void MainWindow::dane_i_wykresy()
     }
 
     //wykres->WykresWartosciZadanej();
+    if( !ui->chkServer->isChecked() || TCPpolaczenie == nullptr ){
     wykres->WykresUchybu();
     wykres->WykresPID();
+    }
     wykres->WykresWartosciSterowania();
     wykres->krok();
     wykres->AktualizujWykresy();
