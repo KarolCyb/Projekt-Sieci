@@ -1331,6 +1331,8 @@ void MainWindow::errorPolaczenie(){
     reset = false;
     this->simulationTimer->setInterval(ui->Interwal->text().toInt());
     //QMessageBox::information(this, "Informacja", "Nastąpiło nagłe utracenie połaczenia");
+    ui->statusbar->showMessage("Nastąpiło rozłączenie");
+
 }
 
 
