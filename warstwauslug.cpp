@@ -190,26 +190,34 @@ void WarstwaUslug::wczytajKonfiguracje() {
     }
 }
 void WarstwaUslug::ResetSymulacji(){
-    symulator* sym = s;
-    if (sym) {
-        sym->getRegulator().ZerowanieNastawaP();
-        sym->getRegulator().ZerowanieNastawaI();
-        sym->getRegulator().ZerowanieNastawaD();
-        sym->setWyjscieObiektu(0);
-        sym->setLastRegulatorValue(0);
-        sym->setLastObjectOutput(0);
 
-        Generator gen = sym->getGenerator();
-        gen.setAmplituda(0);
-        gen.setOkres(0);
-        gen.setWypelnienie(0);
-        sym->setGenerator(gen);
+    if (s) {
+        s->getRegulator().ZerowanieNastawaP();
+        s->getRegulator().ZerowanieNastawaI();
+        s->getRegulator().ZerowanieNastawaD();
+        s->getRegulator().setWartoscSterujaca(0);
+        s->getRegulator().setWartoscZadana(0);
 
-        Regulator reg;
-        sym->setRegulator(reg);
+        s->setWyjscieObiektu(0);
+        s->setLastRegulatorValue(0);
+        s->setLastObjectOutput(0);
 
-        ObiektARX obiekt;
-        sym->setObiektARX(obiekt);
+        s->getGenerator().setAmplituda(0);
+        s->getGenerator().setOkres(0);
+        s->getGenerator().setWypelnienie(0);
+
+        std::vector<double> vec = {0,0,0};
+        s->getObiektARX().setWielomianA(vec);
+        s->getObiektARX().setWielomianB(vec);
+        s->getObiektARX().resetujBufory();
+
+        //sym->setGenerator(gen);
+
+        //Regulator reg;
+        //sym->setRegulator(reg);
+
+        //ObiektARX obiekt;
+        //sym->setObiektARX(obiekt);
 
     }
 }
