@@ -59,11 +59,11 @@ void ObiektARX::setHistoriaWejsciaWyjscia(std::deque<double> stare_ui, std::dequ
     yi = stare_yi;
 }
 void ObiektARX::resetujBufory() {
-    for (int var = 0; var < ui.size(); ++var) {
-        ui[var] = 0;
+    while(!ui.empty()){
+        ui.pop_back();
     }
-    for (int var = 0; var < ui.size(); ++var) {
-        yi[var] = 0;
+    while(!yi.empty()){
+        yi.pop_back();
     }
 }
 

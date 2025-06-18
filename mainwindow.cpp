@@ -104,7 +104,7 @@ void MainWindow::wczytajPakietOneClockArx(QByteArray &dane){
     wykres->WykresPID();
     wykres->krok();
     wykres->AktualizujWykresy();
-    if(run_str_n =='r') on_Reset_clicked();
+    if(run_str_n =='r') {on_Reset_clicked(); reset = true;}
    // qDebug()<<packet_number<<" "<<time;
 }
 void MainWindow::wczytajPakietTwoClockRegulator(QByteArray &dane){
@@ -143,7 +143,7 @@ void MainWindow::wczytajPakietTwoClockObiekt(QByteArray &dane){
     wykres->getSymulator()->setLastRegulatorValue(val);
     wykres->getSymulator()->setLastGeneratorValue(val_zad);
     buferTwoClockObiekt.push_front(val);
-    if(run_str_n =='r') on_Reset_clicked();
+    if(run_str_n =='r'){ on_Reset_clicked(); reset = true;}
     qDebug()<<"wła: "<<packet_number<<" otrz: "<<time;
 }
 void MainWindow::dane_i_wykresy()
@@ -333,6 +333,10 @@ void MainWindow::dane_i_wykresy()
     wykres->krok();
     wykres->AktualizujWykresy();
     //qDebug()<<buferOneClock.front();
+    if(reset){
+        on_Reset_clicked();
+        reset = false;
+    }
 }
 
 void MainWindow::odczyt()
@@ -564,7 +568,6 @@ void MainWindow::bladUstawien()
 void MainWindow::on_Reset_clicked() {
    // disconnect(simulationTimer, nullptr, nullptr, nullptr);
     simulationTimer->stop();
-
     if(TCPpolaczenie != nullptr)
     {
         run_str = 'r';
@@ -1244,7 +1247,7 @@ void MainWindow::errorPolaczenie(){
         TCPserver = nullptr;
     }
     if(!simulationTimer->isActive()) simulationTimer->start(interwalCzasowy);
-    blokada = false;
+    reset = false;
     this->simulationTimer->setInterval(ui->Interwal->text().toInt());
     //QMessageBox::information(this, "Informacja", "Nastąpiło nagłe utracenie połaczenia");
 }

@@ -105,7 +105,7 @@ private:
     int packet_number = 0;
     float korekta = 1;
     bool wyslij_interwal = true;
-    bool blokada = false;
+    bool reset = false;
     bool tryb_stac = true;
     char run_str = 'r';
     int error = -1;
