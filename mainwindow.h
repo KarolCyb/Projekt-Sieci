@@ -112,5 +112,6 @@ private:
     std::deque<double> buferOneClock;
     std::deque<double> buferTwoClockRegulator;
     std::deque<double> buferTwoClockObiekt;
+    std::deque<double> buferTwoClockObiekt_dwa;
 };
 #endif // MAINWINDOW_H

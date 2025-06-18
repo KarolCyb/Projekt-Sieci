@@ -143,6 +143,7 @@ void MainWindow::wczytajPakietTwoClockObiekt(QByteArray &dane){
     wykres->getSymulator()->setLastRegulatorValue(val);
     wykres->getSymulator()->setLastGeneratorValue(val_zad);
     buferTwoClockObiekt.push_front(val);
+    buferTwoClockObiekt_dwa.push_front(val_zad);
     if(run_str_n =='r'){ on_Reset_clicked(); reset = true;}
     qDebug()<<"wła: "<<packet_number<<" otrz: "<<time;
 }
@@ -310,6 +311,16 @@ void MainWindow::dane_i_wykresy()
             while(buferTwoClockObiekt.size() > 2)
             {
                 buferTwoClockObiekt.pop_back();
+            }
+        }
+        if(!buferTwoClockObiekt_dwa.empty())
+        {
+            double val_zad = buferTwoClockObiekt_dwa.back();
+            wykres->getSymulator()->setLastGeneratorValue(val_zad);
+            buferTwoClockObiekt_dwa.pop_back();
+            while(buferTwoClockObiekt_dwa.size() > 2)
+            {
+                buferTwoClockObiekt_dwa.pop_back();
             }
         }
         double wyjscie = wykres->getSymulator()->symuluj_wyjscie();
