@@ -61,6 +61,7 @@ double Regulator::getNastawaD(){
 void Regulator::ZerowanieNastawaD(){
     sumaUchybow=0;
     nastawaI=0;
+    WczesniejszyUchyb = 0;
 }
 void Regulator::ZerowanieNastawaI(){
     nastawaI=0;
@@ -101,5 +102,6 @@ void Regulator::resetuj() {
     WczesniejszyUchyb = 0;
     sumaUchybow = 0;
     WartoscSterujaca = 0;
+    sumaUchybow2 = 0;
 }
 

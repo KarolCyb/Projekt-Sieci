@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent, WarstwaUslug *prog)
         wykres->WykresWartosciSterowania();
     });*/
     buferOneClock.resize(100);
+    ui->RodzajSygnalu->setText("Prostokątny");
+    ui->Sposob->setText("Stała w Sumie");
     connect(simulationTimer, &QTimer::timeout, this, &MainWindow::dane_i_wykresy);
 }
 void MainWindow::zapiszPakietRegulator(QByteArray &dane){
@@ -541,7 +543,68 @@ void MainWindow::on_Start_clicked()
 {
     usluga->SprawdzenieWszystkichDanych(interwalCzasowy);
     run_str = 'g';
-}
+
+
+
+        gen->setAmplituda(ui->Amplituda->value());
+        usluga->getSymulator()->getGenerator().setAmplituda(ui->Amplituda->value());
+
+
+        gen->setWypelnienie(ui->Wypelnienie->value());
+        usluga->getSymulator()->getGenerator().setWypelnienie(ui->Wypelnienie->value());
+
+        gen->setCzasAktywacji(ui->CzasAktywacji->value());
+        usluga->getSymulator()->getGenerator().setCzasAktywacji(ui->CzasAktywacji->value());
+
+        gen->setOkres(ui->Okres->value());
+        usluga->getSymulator()->getGenerator().setOkres(ui->Okres->value());
+
+        reg->setWzmocnienie(ui->Wzmocnienie->value());
+        usluga->getSymulator()->getRegulator().setWzmocnienie(ui->Wzmocnienie->value());
+
+        reg->setStalaI(ui->StalaI->value());
+        usluga->getSymulator()->getRegulator().setStalaI(ui->StalaI->value());
+
+        reg->setStalaD(ui->StalaD->value());
+        usluga->getSymulator()->getRegulator().setStalaD(ui->StalaD->value());
+
+        int interwal = ui->Interwal->text().toInt();
+        if(interwal>0){
+
+            interwalCzasowy=interwal;
+            simulationTimer->setInterval(interwalCzasowy);
+        }
+
+
+        QString wybor =  ui->RodzajSygnalu->text();
+        if (wybor == "Skokowy") {
+            gen->setRodzaj(RodzajSygnalu::Skok);
+            usluga->getSymulator()->getGenerator().setRodzaj(RodzajSygnalu::Skok);
+            ui->RodzajSygnalu->setText("Skokowy");
+        } else if (wybor == "Sinusoidalny") {
+            gen->setRodzaj(RodzajSygnalu::Sinusoida);
+            usluga->getSymulator()->getGenerator().setRodzaj(RodzajSygnalu::Sinusoida);
+            ui->RodzajSygnalu->setText("Sinusoidalny");
+        } else if (wybor == "Prostokątny") {
+            gen->setRodzaj(RodzajSygnalu::Prostokatny);
+            usluga->getSymulator()->getGenerator().setRodzaj(RodzajSygnalu::Prostokatny);
+            ui->RodzajSygnalu->setText("Prostokątny");
+        }
+
+
+
+        QString wybor2 = ui->Sposob->text();
+        if(wybor=="Stała przed Sumą"){
+            reg->setCalkowanieWsumie(false);
+            usluga->getSymulator()->getRegulator().setCalkowanieWsumie(false);
+            ui->Sposob->setText("Stała przed Sumą");
+        }else if(wybor=="Stała w Sumie"){
+            reg->setCalkowanieWsumie(true);
+            usluga->getSymulator()->getRegulator().setCalkowanieWsumie(true);
+            ui->Sposob->setText("Stała w Sumie");
+        }
+    }
+
 
 void MainWindow::on_Stop_clicked()
 {
@@ -886,7 +949,7 @@ void MainWindow::on_Wypelnienie_editingFinished()
 void MainWindow::on_CzasAktywacji_editingFinished()
 {
     gen->setCzasAktywacji(ui->CzasAktywacji->value());
-    usluga->getSymulator()->getGenerator().setWypelnienie(ui->CzasAktywacji->value());
+    usluga->getSymulator()->getGenerator().setCzasAktywacji(ui->CzasAktywacji->value());
 }
 void MainWindow::on_Okres_editingFinished()
 {
