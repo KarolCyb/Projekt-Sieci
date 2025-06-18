@@ -126,6 +126,7 @@ void MainWindow::wczytajPakietTwoClockRegulator(QByteArray &dane){
     ui->label_color->setStyleSheet("QLabel{background-color : green;}");
     wykres->getSymulator()->setWyjscieObiektu(val_wyj);
     wykres->getSymulator()->setLastObjectOutput(val_wyj);
+    buferTwoClockRegulator.push_front(val_wyj);
     ui->ms_label->setText(QString::number(duration.count())+" ms");
 }
 void MainWindow::wczytajPakietTwoClockObiekt(QByteArray &dane){
@@ -262,7 +263,17 @@ void MainWindow::dane_i_wykresy()
     }
     if(TCPpolaczenie != nullptr && !ui->chkServer->isChecked() && !ui->chkObustronneTaktowanie->isChecked())
     {
-
+        if(!buferTwoClockRegulator.empty())
+        {
+            double val_wyj = buferTwoClockRegulator.back();
+            wykres->getSymulator()->setWyjscieObiektu(val_wyj);
+            wykres->getSymulator()->setLastObjectOutput(val_wyj);
+            buferTwoClockRegulator.pop_back();
+            while(buferTwoClockRegulator.size() > 2)
+            {
+                buferTwoClockRegulator.pop_back();
+            }
+        }
         if(wykres->getSymulator()->getFlag())
         {
             start_m = std::chrono::high_resolution_clock::now();
