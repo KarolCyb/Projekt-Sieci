@@ -49,6 +49,13 @@ public:
     bool getFlagSynchro(){return flaga_synchro;}
     void setFlagSynchro(bool wart){flaga_synchro = wart;}
     void setWyjscie(double wal){wyjscieObiektu = 0;}
+    void resetSym(){
+       poprzednieWyjscie = 0;
+        wyjscieObiektu = 0;
+        lastRegulatorValue = 0;
+        lastObjectOutput = 0 ;
+        lastGeneratorValue = 0;
+    }
 };
 
 #endif // SYMULATOR_H

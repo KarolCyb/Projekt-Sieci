@@ -38,6 +38,10 @@ public:
     std::deque<double> getYi() const { return yi; }
     void resetujBufory();
     void setPrzedzialZaklocenia(double m,double s);
+    void resetZM(){
+        k =0; z=0;
+        mean =0; stdev =0;
+    }
 };
 
 #endif // OBIEKTARX_H
