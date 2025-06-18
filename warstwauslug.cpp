@@ -45,7 +45,7 @@ void WarstwaUslug::SprawdzenieObiektu(ObiektARX* o){
     }
     if(b != 3 && a != 3 && o->getOpoznienie() >= 0) {
 
-        s->setObiektARXzHistoria(*o);
+        s->setObiektARX(*o);
 
     }else{
         emit blad();

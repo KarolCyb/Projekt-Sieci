@@ -660,6 +660,8 @@ void MainWindow::on_Reset_clicked() {
     wykres->getSymulator()->setLastRegulatorValue(0);
     wykres->getSymulator()->setLastObjectOutput(0);
     wykres->getSymulator()->getRegulator().resetuj();
+    wykres->getSymulator()->resetSym();
+    wykres->getSymulator()->getObiektARX().resetZM();
 }
 
 void MainWindow::obslugaZapisu()
