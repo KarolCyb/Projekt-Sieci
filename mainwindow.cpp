@@ -1049,6 +1049,7 @@ void MainWindow::on_btnSendSignal_clicked()
                     ui->statusbar->showMessage("Otrzymano połączenie z serwerem " + address.toString() + " na porcie:  " +  QString::number(port));
                     ui->btnSendSignal->setEnabled(0);
                     ui->btnRozlacz->setEnabled(1);
+                    ui->chkServer->setEnabled(0);
                     connect(TCPpolaczenie, &QTcpSocket::readyRead, this, &MainWindow::odczyt_klient);
                     connect(TCPpolaczenie, &QTcpSocket::disconnected, this, &MainWindow::errorPolaczenie);
                     ui->cbxZmianaTrybu->setEnabled(false);
@@ -1073,6 +1074,7 @@ void MainWindow::on_btnSendSignal_clicked()
             //connect(TCPserver, SIGNAL(disco))
             ui->btnSendSignal->setEnabled(0);
             ui->btnRozlacz->setEnabled(1);
+            ui->chkServer->setEnabled(0);
             ui->cbxZmianaTrybu->setEnabled(false);
             tryb_stac = false;
         }
@@ -1120,6 +1122,7 @@ void MainWindow::on_btnRozlacz_clicked()
                 TCPpolaczenie->close();
                 ui->btnSendSignal->setEnabled(1);
                 ui->btnRozlacz->setEnabled(0);
+                ui->chkServer->setEnabled(1);
                 //TCPpolaczenie = nullptr;
             }
         }
@@ -1132,6 +1135,7 @@ void MainWindow::on_btnRozlacz_clicked()
                 ui->statusbar->showMessage("Server zakończył prace");
                 ui->btnSendSignal->setEnabled(1);
                 ui->btnRozlacz->setEnabled(0);
+                ui->chkServer->setEnabled(1);
                 //TCPserver = nullptr;
             }
         }
@@ -1308,6 +1312,7 @@ void MainWindow::errorPolaczenie(){
     ui->Stop->setEnabled(1);
     ui->Reset->setEnabled(1);
     ui->cbxZmianaTrybu->setCurrentIndex(0);
+    ui->chkServer->setEnabled(1);
 
     ui->ms_label->setVisible(0);
     emit ui->cbxZmianaTrybu->activated(0);
